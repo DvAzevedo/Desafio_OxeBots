@@ -26,7 +26,7 @@ int main(int argc, char *args[])
     }
 
     // Create window
-    window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("Desafio OxeBots Equipe 1", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (window == NULL)
     {
         std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
@@ -63,6 +63,7 @@ int main(int argc, char *args[])
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderDrawRect(renderer, &rightRect);
 
+    // Draw circle
     for (int angle = 0; angle < 360; ++angle)
     {
         float radians = angle * (M_PI / 180);
