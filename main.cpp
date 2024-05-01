@@ -1,56 +1,93 @@
 #include <SDL2/SDL.h>
 #include <iostream>
+#include <cmath>
 
-#undef main
+const int SCREEN_WIDTH = 900;
+const int SCREEN_HEIGHT = 450;
+const int RECT_WIDTH = SCREEN_WIDTH / 8;
+const int RECT_HEIGHT = SCREEN_HEIGHT / 2;
+const int LINE_WIDTH = 4;
 
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
+float radius = RECT_HEIGHT / 2;
 
-int main(int argc, char **argv)
+int centerX = SCREEN_WIDTH / 2;
+int centerY = SCREEN_HEIGHT / 2;
+
+int main(int argc, char *args[])
 {
+    SDL_Window *window = NULL;
+    SDL_Renderer *renderer = NULL;
+
+    // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        std::cerr << "Error: SDL failed to initialize\nSDL Error: '" << SDL_GetError() << "'\n";
+        std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
         return 1;
     }
 
-    SDL_Window *window = SDL_CreateWindow("SDL test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
-    if (!window)
+    // Create window
+    window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    if (window == NULL)
     {
-        std::cerr << "Error: Failed to open window\nSDL Error: '" << SDL_GetError() << "'\n";
+        std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
         return 1;
     }
 
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (!renderer)
+    // Create renderer
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if (renderer == NULL)
     {
-        std::cerr << "Error: Failed to create renderer\nSDL Error: '" << SDL_GetError() << "'\n";
+        std::cerr << "Renderer could not be created! SDL_Error: " << SDL_GetError() << std::endl;
         return 1;
     }
 
-    bool running = true;
-    while (running)
+    // Set background color to white
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderClear(renderer);
+
+    // Draw vertical line
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderDrawLine(renderer, SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT);
+
+    // Draw left rectangle
+    SDL_Rect leftRect = {0, SCREEN_HEIGHT / 4, RECT_WIDTH, RECT_HEIGHT};
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(renderer, &leftRect);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderDrawRect(renderer, &leftRect);
+
+    // Draw right rectangle
+    SDL_Rect rightRect = {SCREEN_WIDTH - RECT_WIDTH, SCREEN_HEIGHT / 4, RECT_WIDTH, RECT_HEIGHT};
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(renderer, &rightRect);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderDrawRect(renderer, &rightRect);
+
+    for (int angle = 0; angle < 360; ++angle)
     {
-        SDL_Event event;
-        while (SDL_PollEvent(&event))
+        float radians = angle * (M_PI / 180);
+        int x = centerX + static_cast<int>(radius * cos(radians));
+        int y = centerY + static_cast<int>(radius * sin(radians));
+        SDL_RenderDrawPoint(renderer, x, y);
+    }
+    // Update screen
+    SDL_RenderPresent(renderer);
+
+    // Wait for exit
+    bool quit = false;
+    SDL_Event e;
+    while (!quit)
+    {
+        while (SDL_PollEvent(&e) != 0)
         {
-            switch (event.type)
+            if (e.type == SDL_QUIT)
             {
-            case SDL_QUIT:
-                running = false;
-                break;
-
-            default:
-                break;
+                quit = true;
             }
         }
-
-        SDL_SetRenderDrawColor(renderer, 25, 150, 50, 255);
-        SDL_RenderClear(renderer);
-
-        SDL_RenderPresent(renderer);
     }
 
+    // Cleanup
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
