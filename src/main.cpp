@@ -32,20 +32,25 @@ int main() {
 
     Field field(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+    SDL_Color red = {200, 0, 0, 255};
+
+    Ball ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 20, red);
 
     bool quit = false;
     SDL_Event e;
-    while (!quit)
-    {
+    while (!quit) {
         // Desenha o campo
         field.draw(renderer);
+        ball.draw(renderer);
+
         // Atualizar a tela
         SDL_RenderPresent(renderer);
 
-        while (SDL_PollEvent(&e) != 0)
-        {
-            if (e.type == SDL_QUIT)
-            {
+        // Atraso para diminuir a velocidade de atualização
+        SDL_Delay(10);
+
+        while (SDL_PollEvent(&e) != 0) {
+            if (e.type == SDL_QUIT) {
                 quit = true;
             }
         }

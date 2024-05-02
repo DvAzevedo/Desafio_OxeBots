@@ -9,7 +9,7 @@ class Field {
     Field(int width, int height);
 
     // Função para desenhar o campo no renderizador
-    void draw(SDL_Renderer* renderer);
+    void draw(SDL_Renderer * renderer);
 
    private:
     int width;
