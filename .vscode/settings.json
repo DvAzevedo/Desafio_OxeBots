@@ -1,0 +1,10 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "${workspaceFolder}",
+            "binaryPath": "${workspaceFolder}/executable.out",
+            "binaryArgs": []
+        }
+    ],
+    "makefile.buildLog": ""
+}
