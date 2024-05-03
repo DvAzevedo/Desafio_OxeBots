@@ -1,7 +1,8 @@
 #include "../include/main.hpp"
 
-const int SCREEN_WIDTH = 900;
-const int SCREEN_HEIGHT = 450;
+constexpr int SCREEN_WIDTH = 900;
+constexpr int SCREEN_HEIGHT = 450;
+constexpr int MS_PER_FRAME = 16;  // ~60 FPS
 
 int main() {
     // Initialize SDL
@@ -50,8 +51,8 @@ int main() {
         // Atualizar a tela
         SDL_RenderPresent(renderer);
 
-        // Atraso para diminuir a velocidade de atualização
-        SDL_Delay(10);
+        // Atraso para manter a taxa de quadros constante em ~60 FPS
+        SDL_Delay(MS_PER_FRAME);
 
         while (SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) {
