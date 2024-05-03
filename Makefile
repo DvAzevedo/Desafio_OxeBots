@@ -2,8 +2,15 @@
 CC := g++
 
 # Define the SDL2 library path
-SDL2_FLAGS := $(shell pkg-config --libs sdl2)
-$(info SDL2 flags: $(SDL2_FLAGS))
+# SDL2_FLAGS := $(shell pkg-config --libs sdl2)
+# $(info SDL2 flags: $(SDL2_FLAGS))
+
+ifeq ($(OS),Windows_NT)
+	SDL2_FLAGS := -IC:/Users/davia/Downloads/sdl/SDL2-2.30.2/i686-w64-mingw32/include -LC:/Users/davia/Downloads/sdl/SDL2-2.30.2/i686-w64-mingw32/lib -lSDL2
+else
+	SDL2_FLAGS := $(shell pkg-config --libs sdl2)
+endif
+
 
 # Define the source files
 SOURCE_FILES := $(wildcard src/*.cpp)
@@ -43,6 +50,13 @@ release: all
 	$(info Compiling $<...)
 	$(CC) -c $< -o $@ $(CXXFLAGS) $(SDL2_FLAGS)
 
+
+#Compile the source code into object files
+# %.o: %.cpp
+# 	$(info Compiling $<...)
+# 	$(CC) -c $< -o $@ $(CXXFLAGS) -I"C:/Users/davia/Downloads/sdl/SDL2-2.30.2/i686-w64-mingw32/include"
+
+
 # Link the object files with SDL2 library to create the executable
 $(EXEC): $(OBJECTS)
 	$(info Linking the object files...)
@@ -50,8 +64,14 @@ $(EXEC): $(OBJECTS)
 
 # Clean the project (removes object files and executable)
 clean:
-	$(info Cleaning the project...)
-	rm -f $(OBJECTS) $(EXEC)
+	@if exist src\*.o ( \
+		echo Cleaning the project... \
+		del /Q src\*.o \
+		del /Q $(EXEC) \
+	) else ( \
+		echo Cleaning the project... \
+		rm -f $(OBJECTS) $(EXEC) \
+	)
 
 # Run the program
 run:
