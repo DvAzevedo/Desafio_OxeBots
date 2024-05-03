@@ -14,7 +14,7 @@ OBJECTS := $(SOURCE_FILES:.cpp=.o)
 $(info Object files: $(OBJECTS))
 
 # Define the executable name
-EXEC := executable.out
+EXEC := simulator.exe
 $(info Executable: $(EXEC))
 
 # Debug flags
