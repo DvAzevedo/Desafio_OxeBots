@@ -2,7 +2,7 @@
 
 // Fator de decaimento da velocidade da bola, a cada iteração a velocidade é
 // multiplicada por esse fator para simular a perda de energia
-constexpr float DECAY_FACTOR = 0.9f;
+constexpr float DECAY_FACTOR = 0.95f;
 
 // Construtor para definir posição e raio
 Ball::Ball(int x, int y, int radius, SDL_Color color)
