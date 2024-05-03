@@ -1,10 +1,6 @@
 # Define the compiler
 CC := g++
 
-# Define the SDL2 library path
-# SDL2_FLAGS := $(shell pkg-config --libs sdl2)
-# $(info SDL2 flags: $(SDL2_FLAGS))
-
 ifeq ($(OS),Windows_NT)
 	SDL2_FLAGS := -IC:/Users/davia/Downloads/sdl/SDL2-2.30.2/i686-w64-mingw32/include -LC:/Users/davia/Downloads/sdl/SDL2-2.30.2/i686-w64-mingw32/lib -lSDL2
 else
