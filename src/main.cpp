@@ -36,12 +36,16 @@ int main() {
 
     Ball ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 20, red);
 
+    ball.setSpeed(10, -10);
+
     bool quit = false;
     SDL_Event e;
     while (!quit) {
         // Desenha o campo
         field.draw(renderer);
         ball.draw(renderer);
+
+        ball.move();
 
         // Atualizar a tela
         SDL_RenderPresent(renderer);
