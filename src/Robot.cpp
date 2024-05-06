@@ -17,6 +17,12 @@ Robot::Robot(SDL_Color color, int x, int y)
     this->body.v2 = {x + ROBOT_SIZE, y - ROBOT_SIZE};
     this->body.v3 = {x + ROBOT_SIZE, y + ROBOT_SIZE};
     this->body.v4 = {x - ROBOT_SIZE, y + ROBOT_SIZE};
+
+    vertexs[0] = body.v1;
+    vertexs[1] = body.v2;
+    vertexs[2] = body.v3;
+    vertexs[3] = body.v4;
+
     this->rotatedBody = body;
 }
 
@@ -28,6 +34,18 @@ void Robot::Move()
     int x_v = std::min(static_cast<int>(velocity * cos(angle)), int(velocity)) * direction;
 
     int y_v = std::min(static_cast<int>(velocity * sin(angle)), int(velocity)) * direction;
+
+    for (int i = 0; i < 4; i++)
+    {
+        if (vertexs[i].x + x_v <= 5)
+            x_v = 0;
+        if (vertexs[i].x + x_v >= SCREEN_WIDTH - 5)
+            x_v = 0;
+        if (vertexs[i].y + y_v <= 5)
+            y_v = 0;
+        if (vertexs[i].y + y_v >= SCREEN_HEIGHT - 5)
+            y_v = 0;
+    }
 
     x += x_v;
     y += y_v;
@@ -43,6 +61,12 @@ void Robot::Move()
 
     body.v4.x += x_v;
     body.v4.y += y_v;
+
+    for (int i = 0; i < 4; i++)
+    {
+        vertexs[i].x += x_v;
+        vertexs[i].y += y_v;
+    }
 
     Rotate(angle);
 }

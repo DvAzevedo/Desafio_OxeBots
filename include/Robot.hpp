@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <iostream>
 #include <math.h>
+#include "GlobalVariables.hpp"
 
 #ifndef ROBOT_HPP
 #define ROBOT_HPP
@@ -54,6 +55,8 @@ public:
 
 private:
     int x, y;
+    // int vertexs_x = [4];
+    // int vertexs_y = [4];
     double velocity;
     double velocityMax;
     double acceleration;
@@ -62,6 +65,8 @@ private:
     SDL_Color color;
     int direction;
     bool changingDirection;
+
+    SDL_Point vertexs[4];
 
     RobotBody body;
     RobotBody rotatedBody;
