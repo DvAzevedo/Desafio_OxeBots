@@ -1,10 +1,13 @@
 #include <SDL2/SDL.h>
 #include <algorithm>
+#include <iostream>
+#include <math.h>
 
 #ifndef ROBOT_HPP
 #define ROBOT_HPP
 
-struct RobotBody {
+struct RobotBody
+{
     // 4 vertices of the robot box body
     SDL_Point v1;
     SDL_Point v2;
@@ -12,32 +15,51 @@ struct RobotBody {
     SDL_Point v4;
 };
 
-class Robot {
-   public:
+class Robot
+{
+public:
     Robot(SDL_Color color, int x, int y);
+    void setMove(SDL_Event &e);
     void Move();
-    void Draw(SDL_Renderer * renderer);
+    void Draw(SDL_Renderer *renderer);
 
     void Forward();
     void Backward();
     void Stop();
+    void accelerate();
 
     void SetPosition(int x, int y);
 
-    void SetVelocity(double velocity);
+    void userSetVelocity(double velocity);
+
+    void setVelocity();
+
+    void setAcceleration(double acceleration);
+
+    void isChangingDirection(bool changingDirection);
+
+    void changeDirection();
 
     void SetAngle(double angle);
 
+    void set_if_it_is_moving(bool);
+
+    double getAcceleration();
     double GetAngle();
+    int getDirection();
     int GetX();
     int GetY();
 
-   private:
+private:
     int x, y;
     double velocity;
+    double velocityMax;
+    double acceleration;
+    bool moving;
     double angle;
     SDL_Color color;
     int direction;
+    bool changingDirection;
 
     RobotBody body;
     RobotBody rotatedBody;
@@ -45,4 +67,4 @@ class Robot {
     void Rotate(double angle);
 };
 
-#endif  // ROBOT_HPP
+#endif // ROBOT_HPP
