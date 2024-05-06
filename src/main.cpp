@@ -4,10 +4,6 @@ using namespace std;
 
 #undef main
 
-constexpr int SCREEN_WIDTH = 900;
-constexpr int SCREEN_HEIGHT = 450;
-constexpr int MS_PER_FRAME = 16; // ~60 FPS
-
 int main()
 {
     // Initialize SDL
@@ -48,7 +44,7 @@ int main()
 
     Robot robot1(blue, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2);
 
-    ball.setSpeed(0, 0);
+    ball.setSpeed(-10, -10);
     robot1.SetAngle(M_PI / 4);
     robot1.SetAngle(0);
 
