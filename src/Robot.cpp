@@ -7,7 +7,7 @@ constexpr int MOVE_SPEED = 5;
 constexpr int ROBOT_SIZE = 20;
 
 Robot::Robot(SDL_Color color, int x, int y)
-    : velocity(1), angle(0), direction(1), changingDirection(false), velocityMax(6), moving(false), acceleration(0.5)
+    : velocity(1), angle(0), direction(1), changingDirection(false), velocityMax(5), moving(false), acceleration(0.5)
 {
     this->x = x;
     this->y = y;
@@ -44,24 +44,6 @@ void Robot::Move()
     body.v4.x += x_v;
     body.v4.y += y_v;
 
-    // velocity *= DECAY_FACTOR;
-
-    // Clamp angle to -90 to 90 degrees, so the robot can only move forward and
-    // backward
-    if (angle > M_PI / 2)
-    {
-        angle = M_PI / 2;
-    }
-    else if (angle < -M_PI / 2)
-    {
-        angle = -M_PI / 2;
-    }
-
-    if (velocity < 0.5)
-    {
-        velocity = 0;
-    }
-
     Rotate(angle);
 }
 
@@ -76,26 +58,32 @@ void Robot::Draw(SDL_Renderer *renderer)
 
     // TODO Draw the robot's face, and infill the rectangle
 }
+
 void Robot::setMove(SDL_Event &e)
 {
-    if (e.key.keysym.sym == SDLK_SPACE)
+    if (e.type == SDL_KEYDOWN)
     {
-        if (moving)
+        switch (e.key.keysym.sym)
         {
-            Stop();
+        case SDLK_SPACE:
+            if (moving)
+                Stop();
+            else
+                accelerate();
+            break;
+        case SDLK_UP:
+            Forward();
+            break;
+        case SDLK_DOWN:
+            Backward();
+            break;
+        case SDLK_LEFT:
+            turnLeft();
+            break;
+        case SDLK_RIGHT:
+            turnRight();
+            break;
         }
-        else
-        {
-            accelerate();
-        }
-    }
-    if (e.key.keysym.sym == SDLK_UP)
-    {
-        Forward();
-    }
-    if (e.key.keysym.sym == SDLK_DOWN)
-    {
-        Backward();
     }
 }
 void Robot::Forward()
@@ -119,6 +107,14 @@ void Robot::accelerate()
 void Robot::Stop()
 {
     set_if_it_is_moving(false);
+}
+void Robot::turnRight()
+{
+    angle += 0.05f;
+}
+void Robot::turnLeft()
+{
+    angle -= 0.05f;
 }
 
 void Robot::SetPosition(int x, int y)
@@ -202,3 +198,24 @@ void Robot::Rotate(double angle)
     rotatedBody.v3 = RotatePoint(body.v3, angle, {x, y});
     rotatedBody.v4 = RotatePoint(body.v4, angle, {x, y});
 }
+
+// move{
+//  velocity *= DECAY_FACTOR;
+
+// Clamp angle to -90 to 90 degrees, so the robot can only move forward and
+// backward
+
+// if (angle > M_PI / 2)
+// {
+//     angle = M_PI / 2;
+// }
+// else if (angle < -M_PI / 2)
+// {
+//     angle = -M_PI / 2;
+// }
+
+// if (velocity < 0.5)
+// {
+//     velocity = 0;
+// }
+//}

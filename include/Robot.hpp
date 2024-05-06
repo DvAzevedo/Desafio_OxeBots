@@ -27,6 +27,8 @@ public:
     void Backward();
     void Stop();
     void accelerate();
+    void turnRight();
+    void turnLeft();
 
     void SetPosition(int x, int y);
 

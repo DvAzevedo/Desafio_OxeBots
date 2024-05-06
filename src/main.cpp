@@ -48,7 +48,7 @@ int main()
 
     Robot robot1(blue, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2);
 
-    ball.setSpeed(-10, 0);
+    ball.setSpeed(0, 0);
     robot1.SetAngle(M_PI / 4);
     robot1.SetAngle(0);
 
