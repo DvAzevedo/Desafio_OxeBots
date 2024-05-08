@@ -1,22 +1,28 @@
 #include "../include/Ball.hpp"
-
 // Fator de decaimento da velocidade da bola, a cada iteração a velocidade é
 // multiplicada por esse fator para simular a perda de energia
-constexpr float DECAY_FACTOR = 0.95f;
+constexpr float DECAY_FACTOR = 0.99f;
 
 // Construtor para definir posição e raio
 Ball::Ball(int x, int y, int radius, SDL_Color color)
-: _x(x), _y(y), _radius(radius), _color(color), _dx(0), _dy(0) {}
+    : _x(x),
+      _y(y), _radius(radius), _color(color), _dx(0), _dy(0)
+{
+}
 
 // Função para desenhar a bola no renderizador
-void Ball::draw(SDL_Renderer * renderer) {
+void Ball::draw(SDL_Renderer *renderer)
+{
     // Definir a cor da bola
     SDL_SetRenderDrawColor(renderer, _color.r, _color.g, _color.b, _color.a);
 
     // Desenhar a bola
-    for (int dy = -_radius; dy <= _radius; dy++) {
-        for (int dx = -_radius; dx <= _radius; dx++) {
-            if (dx * dx + dy * dy <= _radius * _radius) {
+    for (int dy = -_radius; dy <= _radius; dy++)
+    {
+        for (int dx = -_radius; dx <= _radius; dx++)
+        {
+            if (dx * dx + dy * dy <= _radius * _radius)
+            {
                 SDL_SetRenderDrawColor(renderer, _color.r, _color.g, _color.b,
                                        _color.a);
                 SDL_RenderDrawPoint(renderer, _x + dx, _y + dy);
@@ -26,7 +32,16 @@ void Ball::draw(SDL_Renderer * renderer) {
 }
 
 // Função para mover a bola
-void Ball::move() {
+void Ball::move()
+{
+    if (_y > (SCREEN_HEIGHT - _radius) || _y < (0 + _radius))
+    {
+        _dy *= -1;
+    }
+    if (_x > (SCREEN_WIDTH - _radius) || _x < (0 + _radius))
+    {
+        _dx *= -1;
+    }
     _x += static_cast<int>(_dx);
     _y += static_cast<int>(_dy);
 
@@ -35,7 +50,8 @@ void Ball::move() {
 }
 
 // Função para definir a velocidade da bola
-void Ball::setSpeed(int dx, int dy) {
+void Ball::setSpeed(int dx, int dy)
+{
     _dx = dx;
     _dy = dy;
 }
