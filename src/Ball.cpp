@@ -13,13 +13,31 @@ void Ball::draw(SDL_Renderer * renderer) {
     SDL_SetRenderDrawColor(renderer, _color.r, _color.g, _color.b, _color.a);
 
     // Desenhar a bola
-    for (int dy = -_radius; dy <= _radius; dy++) {
-        for (int dx = -_radius; dx <= _radius; dx++) {
-            if (dx * dx + dy * dy <= _radius * _radius) {
-                SDL_SetRenderDrawColor(renderer, _color.r, _color.g, _color.b,
-                                       _color.a);
-                SDL_RenderDrawPoint(renderer, _x + dx, _y + dy);
-            }
+    int offsetx, offsety, d;
+    offsetx = 0;
+    offsety = _radius;
+    d = _radius - 1;
+
+    while (offsety >= offsetx) {
+        SDL_RenderDrawLine(renderer, _x - offsety, _y + offsetx, _x + offsety,
+                           _y + offsetx);
+        SDL_RenderDrawLine(renderer, _x - offsetx, _y + offsety, _x + offsetx,
+                           _y + offsety);
+        SDL_RenderDrawLine(renderer, _x - offsetx, _y - offsety, _x + offsetx,
+                           _y - offsety);
+        SDL_RenderDrawLine(renderer, _x - offsety, _y - offsetx, _x + offsety,
+                           _y - offsetx);
+
+        if (d >= 2 * offsetx) {
+            d -= 2 * offsetx + 1;
+            offsetx += 1;
+        } else if (d < 2 * (_radius - offsety)) {
+            d += 2 * offsety - 1;
+            offsety -= 1;
+        } else {
+            d += 2 * (offsety - offsetx - 1);
+            offsety -= 1;
+            offsetx += 1;
         }
     }
 }

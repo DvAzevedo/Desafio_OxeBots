@@ -42,7 +42,6 @@ int main() {
 
     ball.setSpeed(-10, -10);
     robot1.SetAngle(M_PI / 4);
-    robot1.SetAngle(0);
 
     bool quit = false;
     SDL_Event e;
