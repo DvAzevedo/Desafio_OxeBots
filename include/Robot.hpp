@@ -10,10 +10,7 @@
 struct RobotBody
 {
     // 4 vertices of the robot box body
-    SDL_Point v1;
-    SDL_Point v2;
-    SDL_Point v3;
-    SDL_Point v4;
+    SDL_Point points[4];
 };
 
 class Robot
@@ -55,8 +52,6 @@ public:
 
 private:
     int x, y;
-    // int vertexs_x = [4];
-    // int vertexs_y = [4];
     double velocity;
     double velocityMax;
     double acceleration;
@@ -66,12 +61,11 @@ private:
     int direction;
     bool changingDirection;
 
-    SDL_Point vertexs[4];
-
     RobotBody body;
     RobotBody rotatedBody;
 
     void Rotate(double angle);
+    void SetBodyPosition(int x, int y);
 };
 
 #endif // ROBOT_HPP

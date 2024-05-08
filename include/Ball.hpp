@@ -37,7 +37,7 @@ public:
 private:
     int _x;
     int _y;
-    int _radius;
+    int const _radius;
     SDL_Color _color;
 
     // velocidade da bola
