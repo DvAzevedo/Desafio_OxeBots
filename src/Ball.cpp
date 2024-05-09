@@ -36,11 +36,11 @@ void Ball::move()
 {
     if (!isCatch)
     {
-        if (_y > (SCREEN_HEIGHT - _radius) || _y < (0 + _radius))
+        if (_y > (SCREEN_HEIGHT - _radius - 5) || _y < (5 + _radius))
         {
             _dy *= -1;
         }
-        if (_x > (SCREEN_WIDTH - _radius) || _x < (0 + _radius))
+        if (_x > (SCREEN_WIDTH - _radius - 5) || _x < (5 + _radius))
         {
             _dx *= -1;
         }

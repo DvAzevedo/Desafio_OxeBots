@@ -5,7 +5,7 @@
 bool itIsClose(double a, double b)
 {
     double distancia = a - b;
-    if ((distancia * distancia) <= 100)
+    if ((distancia * distancia) <= 144)
     {
         return true;
     }
