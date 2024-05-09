@@ -65,6 +65,18 @@ int Ball::getX() { return _x; }
 // Função para obter a posição y da bola
 int Ball::getY() { return _y; }
 
+Vector2D Ball::getCoordinates() const
+{
+    Vector2D coordinates(_x, _y);
+    return coordinates;
+}
+
+void Ball::setCoordinates(const Vector2D &newCoordinates)
+{
+    _x = newCoordinates.x;
+    _y = newCoordinates.y;
+}
+
 // Função para obter o raio da bola
 int Ball::getRadius() { return _radius; }
 

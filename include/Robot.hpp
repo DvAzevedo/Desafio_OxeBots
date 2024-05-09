@@ -52,6 +52,7 @@ public:
     int getDirection();
     int GetX();
     int GetY();
+    Vector2D getCoordinates() const;
 
 private:
     int x, y;

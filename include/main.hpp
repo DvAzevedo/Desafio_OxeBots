@@ -5,4 +5,5 @@
 #include "Ball.hpp"
 #include "Field.hpp"
 #include "Robot.hpp"
+#include "Interacoes.hpp"
 #include "GlobalVariables.hpp"

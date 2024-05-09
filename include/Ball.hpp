@@ -18,12 +18,13 @@ public:
 
     // Função para inverter a direção da bola
     void invertX();
-
     void invertY();
 
     // Função para obter a posição da bola
     int getX();
     int getY();
+    Vector2D getCoordinates() const;
+    void setCoordinates(const Vector2D &newCoordinates);
 
     // Função para obter o raio da bola
     int getRadius();

@@ -203,6 +203,11 @@ int Robot::getDirection() { return direction; }
 int Robot::GetX() { return x; }
 
 int Robot::GetY() { return y; }
+Vector2D Robot::getCoordinates() const
+{
+    Vector2D coordinates(x, y);
+    return coordinates;
+}
 
 SDL_Point RotatePoint(SDL_Point point, double angle, SDL_Point pivot)
 {
