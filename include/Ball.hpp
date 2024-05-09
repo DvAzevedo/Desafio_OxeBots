@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include "GlobalVariables.hpp"
+#include "struct.hpp"
 
 class Ball
 {
@@ -25,6 +26,9 @@ public:
     int getY();
     Vector2D getCoordinates() const;
     void setCoordinates(const Vector2D &newCoordinates);
+    void setIsCatch(bool wasCatch);
+    bool getJustBeenThrow();
+    void setJustBeenThrow(bool justBeenThrow);
 
     // Função para obter o raio da bola
     int getRadius();
@@ -40,6 +44,8 @@ private:
     int _y;
     int _radius;
     SDL_Color _color;
+    bool isCatch;
+    bool justBeenThrow;
 
     // velocidade da bola
     float _dx;

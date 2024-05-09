@@ -3,13 +3,13 @@
 #include <iostream>
 #include <math.h>
 #include "GlobalVariables.hpp"
+#include "struct.hpp"
 
 #ifndef ROBOT_HPP
 #define ROBOT_HPP
 
 struct RobotBody
 {
-    // 4 vertices of the robot box body
     SDL_Point v1;
     SDL_Point v2;
     SDL_Point v3;
@@ -54,18 +54,26 @@ public:
     int GetY();
     Vector2D getCoordinates() const;
 
+    double getXSpeed();
+    double getYSpeed();
+    void setWithBall(bool caughtBall);
+    void setThrowBall(bool throwBall);
+    bool getWithBall();
+    bool getThrowBall();
+
 private:
     int x, y;
-    // int vertexs_x = [4];
-    // int vertexs_y = [4];
     double velocity;
+    double xSpeed, ySpeed;
     double velocityMax;
     double acceleration;
-    bool moving;
     double angle;
     SDL_Color color;
     int direction;
     bool changingDirection;
+    bool moving;
+    bool withBall;
+    bool throwBall;
 
     SDL_Point vertexs[4];
 
@@ -75,4 +83,4 @@ private:
     void Rotate(double angle);
 };
 
-#endif // ROBOT_HPP
+#endif

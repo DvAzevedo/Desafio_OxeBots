@@ -46,20 +46,42 @@ int main()
 
     ball.setSpeed(-10, -10);
     robot1.SetAngle(0);
-
+    int teste = 0;
     bool quit = false;
     SDL_Event e;
     while (!quit)
     {
+        if (robot1.getWithBall() && robot1.getThrowBall())
+        {
+            cout << "Aqui\n";
+            robot1.setThrowBall(false);
+            robot1.setWithBall(false);
+            ball.setIsCatch(false);
+            ball.setJustBeenThrow(true);
+            cout << robot1.getXSpeed();
+            cout << robot1.getYSpeed();
+            ball.setSpeed(robot1.getXSpeed(), robot1.getYSpeed());
+        }
+
         field.draw(renderer);
         ball.draw(renderer);
         robot1.Draw(renderer);
 
         ball.move();
         robot1.Move();
+
         if (robotCatchBall(robot1.getCoordinates(), ball.getCoordinates()))
         {
-            ball.setCoordinates(robot1.getCoordinates());
+            if (!(ball.getJustBeenThrow()))
+            {
+                ball.setCoordinates(robot1.getCoordinates());
+                ball.setIsCatch(true);
+                robot1.setWithBall(true);
+            }
+        }
+        else
+        {
+            ball.setJustBeenThrow(false);
         }
 
         // Atualizar a tela

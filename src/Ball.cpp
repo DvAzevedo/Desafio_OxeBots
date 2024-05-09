@@ -6,7 +6,7 @@ constexpr float DECAY_FACTOR = 0.99f;
 // Construtor para definir posição e raio
 Ball::Ball(int x, int y, int radius, SDL_Color color)
     : _x(x),
-      _y(y), _radius(radius), _color(color), _dx(0), _dy(0)
+      _y(y), _radius(radius), _color(color), _dx(0), _dy(0), isCatch(false)
 {
 }
 
@@ -34,19 +34,22 @@ void Ball::draw(SDL_Renderer *renderer)
 // Função para mover a bola
 void Ball::move()
 {
-    if (_y > (SCREEN_HEIGHT - _radius) || _y < (0 + _radius))
+    if (!isCatch)
     {
-        _dy *= -1;
-    }
-    if (_x > (SCREEN_WIDTH - _radius) || _x < (0 + _radius))
-    {
-        _dx *= -1;
-    }
-    _x += static_cast<int>(_dx);
-    _y += static_cast<int>(_dy);
+        if (_y > (SCREEN_HEIGHT - _radius) || _y < (0 + _radius))
+        {
+            _dy *= -1;
+        }
+        if (_x > (SCREEN_WIDTH - _radius) || _x < (0 + _radius))
+        {
+            _dx *= -1;
+        }
+        _x += static_cast<int>(_dx);
+        _y += static_cast<int>(_dy);
 
-    _dx = _dx * DECAY_FACTOR;
-    _dy = _dy * DECAY_FACTOR;
+        _dx = _dx * DECAY_FACTOR;
+        _dy = _dy * DECAY_FACTOR;
+    }
 }
 
 // Função para definir a velocidade da bola
@@ -70,6 +73,10 @@ Vector2D Ball::getCoordinates() const
     Vector2D coordinates(_x, _y);
     return coordinates;
 }
+
+void Ball::setIsCatch(bool wasCatch) { isCatch = wasCatch; }
+bool Ball::getJustBeenThrow() { return justBeenThrow; }
+void Ball::setJustBeenThrow(bool justBeenThrow) { this->justBeenThrow = justBeenThrow; }
 
 void Ball::setCoordinates(const Vector2D &newCoordinates)
 {

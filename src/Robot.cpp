@@ -7,7 +7,7 @@ constexpr int MOVE_SPEED = 5;
 constexpr int ROBOT_SIZE = 20;
 
 Robot::Robot(SDL_Color color, int x, int y)
-    : velocity(1), angle(0), direction(1), changingDirection(false), velocityMax(5), moving(false), acceleration(0.5)
+    : velocity(1), angle(0), direction(1), changingDirection(false), velocityMax(5), moving(false), acceleration(0.5), withBall(false), throwBall(false)
 {
     this->x = x;
     this->y = y;
@@ -34,6 +34,9 @@ void Robot::Move()
     int x_v = std::min(static_cast<int>(velocity * cos(angle)), int(velocity)) * direction;
 
     int y_v = std::min(static_cast<int>(velocity * sin(angle)), int(velocity)) * direction;
+
+    xSpeed = std::min(static_cast<int>(10 * cos(angle)), 10) * direction;
+    ySpeed = std::min(static_cast<int>(10 * sin(angle)), 10) * direction;
 
     for (int i = 0; i < 4; i++)
     {
@@ -106,6 +109,10 @@ void Robot::setMove(SDL_Event &e)
             break;
         case SDLK_RIGHT:
             turnRight();
+            break;
+        case SDLK_RETURN:
+            if (withBall)
+                throwBall = true;
             break;
         }
     }
@@ -203,6 +210,18 @@ int Robot::getDirection() { return direction; }
 int Robot::GetX() { return x; }
 
 int Robot::GetY() { return y; }
+
+double Robot::getXSpeed() { return xSpeed; }
+double Robot::getYSpeed() { return ySpeed; }
+
+void Robot::setWithBall(bool caughtBall) { withBall = caughtBall; }
+
+void Robot::setThrowBall(bool throwBall) { this->throwBall = throwBall; }
+
+bool Robot::getWithBall() { return withBall; }
+
+bool Robot::getThrowBall() { return throwBall; }
+
 Vector2D Robot::getCoordinates() const
 {
     Vector2D coordinates(x, y);
@@ -227,24 +246,3 @@ void Robot::Rotate(double angle)
     rotatedBody.v3 = RotatePoint(body.v3, angle, {x, y});
     rotatedBody.v4 = RotatePoint(body.v4, angle, {x, y});
 }
-
-// move{
-//  velocity *= DECAY_FACTOR;
-
-// Clamp angle to -90 to 90 degrees, so the robot can only move forward and
-// backward
-
-// if (angle > M_PI / 2)
-// {
-//     angle = M_PI / 2;
-// }
-// else if (angle < -M_PI / 2)
-// {
-//     angle = -M_PI / 2;
-// }
-
-// if (velocity < 0.5)
-// {
-//     velocity = 0;
-// }
-//}
