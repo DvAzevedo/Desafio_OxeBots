@@ -4,15 +4,6 @@ using namespace std;
 
 #undef main
 
-bool itIsClose(double a, double b)
-{
-    double distancia = a - b;
-    if ((distancia * distancia) <= 25)
-    {
-        return true;
-    }
-    return false;
-}
 int main()
 {
     // Initialize SDL
@@ -53,28 +44,20 @@ int main()
 
     Robot robot1(blue, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2);
 
-    Interacoes interationRobot1Ball(ball, robot1);
-
     ball.setSpeed(-10, -10);
-    robot1.SetAngle(M_PI / 4);
     robot1.SetAngle(0);
 
     bool quit = false;
     SDL_Event e;
     while (!quit)
     {
-        // Desenha o campo
         field.draw(renderer);
         ball.draw(renderer);
         robot1.Draw(renderer);
 
         ball.move();
         robot1.Move();
-        // cout << "Bola: " << ball.getCoordinates().x << ", " << ball.getCoordinates().y << endl;
-        // cout << "Robo: " << robot1.getCoordinates().x << ", " << robot1.getCoordinates().y << endl;
-        // interationRobot1Ball.interationRobotBall();
-
-        if (itIsClose(robot1.getCoordinates().x, ball.getCoordinates().x) && itIsClose(robot1.getCoordinates().y, ball.getCoordinates().y))
+        if (robotCatchBall(robot1.getCoordinates(), ball.getCoordinates()))
         {
             ball.setCoordinates(robot1.getCoordinates());
         }
