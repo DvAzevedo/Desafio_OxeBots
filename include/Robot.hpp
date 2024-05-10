@@ -57,6 +57,14 @@ public:
     double getVelocityX();
     double getVelocityY();
     RobotBody getBody();
+    double getXThrowSpeed();
+    double getYThrowSpeed();
+    void setWithBall(bool caughtBall);
+    void setThrowBall(bool throwBall);
+    void setJustThrowBall(bool justThrowBall);
+    bool getWithBall();
+    bool getThrowBall();
+    bool getJustThrowBall();
 
 private:
     bool changingDirection;
@@ -71,6 +79,10 @@ private:
     RobotBody body;
     RobotBody rotatedBody;
     SDL_Color color;
+    double xThrowSpeed, yThrowSpeed;
+    bool withBall;
+    bool throwBall;
+    bool justThrowBall;
 
     void rotate(double angle);
     void setBodyPosition(int x, int y);

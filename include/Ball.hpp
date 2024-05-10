@@ -40,11 +40,18 @@ public:
     // Função para definir a posição da bola
     void setPosition(int x, int y);
 
+    void setIsCatch(bool wasCatch);
+    bool getIsCatch();
+    bool getJustBeenThrow();
+    void setJustBeenThrow(bool justBeenThrow);
+
 private:
     int _x;
     int _y;
     int const _radius;
     SDL_Color _color;
+    bool isCatch;
+    bool justBeenThrow;
 
     // velocidade da bola
     float _dx;

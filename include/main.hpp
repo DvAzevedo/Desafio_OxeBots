@@ -11,5 +11,6 @@
 #include "Field.hpp"
 #include "GlobalVariables.hpp"
 #include "Robot.hpp"
+#include "Interactions.hpp"
 
 #endif //  MAIN_HPP

@@ -9,7 +9,9 @@ Robot::Robot(SDL_Color color, int x, int y)
       angle(0),
       velocity(1),
       velocityMax(5),
-      direction(1)
+      direction(1),
+      withBall(false),
+      throwBall(false)
 {
     this->x = x;
     this->y = y;
@@ -96,6 +98,10 @@ void Robot::setMove(SDL_Event &e)
             break;
         case SDLK_RIGHT:
             turnRight();
+            break;
+        case SDLK_RETURN:
+            if (withBall)
+                throwBall = true;
             break;
         }
     }
@@ -209,23 +215,17 @@ void Robot::setBodyPosition(int x, int y)
     body.points[3] = {x - ROBOT_SIZE, y + ROBOT_SIZE};
 }
 
-// move{
-//  velocity *= DECAY_FACTOR;
+double Robot::getXThrowSpeed() { return xThrowSpeed; }
+double Robot::getYThrowSpeed() { return yThrowSpeed; }
 
-// Clamp angle to -90 to 90 degrees, so the robot can only move forward and
-// backward
+void Robot::setWithBall(bool caughtBall) { withBall = caughtBall; }
 
-// if (angle > M_PI / 2)
-// {
-//     angle = M_PI / 2;
-// }
-// else if (angle < -M_PI / 2)
-// {
-//     angle = -M_PI / 2;
-// }
+void Robot::setThrowBall(bool throwBall) { this->throwBall = throwBall; }
 
-// if (velocity < 0.5)
-// {
-//     velocity = 0;
-// }
-//}
+bool Robot::getWithBall() { return withBall; }
+
+bool Robot::getThrowBall() { return throwBall; }
+
+void Robot::setJustThrowBall(bool justThrowBall) { this->justThrowBall = justThrowBall; }
+
+bool Robot::getJustThrowBall() { return justThrowBall; }

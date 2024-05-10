@@ -45,6 +45,7 @@ int main()
     robot2.setAngle(M_2_PI + 2.5F);
 
     Colisions colisions(ball, {&robot1, &robot2});
+    Interactions Interactions(ball, {&robot1, &robot2});
 
     ball.setSpeed(0, 0);
 
@@ -59,13 +60,15 @@ int main()
         robot2.draw(renderer);
 
         // Verifica colisões
-        colisions.checkColisions();
+        // colisions.checkColisions();
 
         ball.move();
         robot1.move();
         robot2.move();
 
-        colisions.checkColisions();
+        Interactions.robotsCatchBall();
+
+        // colisions.checkColisions();
 
         // Atualizar a tela
         SDL_RenderPresent(renderer);

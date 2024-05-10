@@ -2,10 +2,11 @@
 
 // Construtor para definir posição e raio
 Ball::Ball(int x, int y, int radius, SDL_Color color)
-: _x(x), _y(y), _radius(radius), _color(color), _dx(0), _dy(0) {}
+    : _x(x), _y(y), _radius(radius), _color(color), _dx(0), _dy(0), isCatch(false) {}
 
 // Função para desenhar a bola no renderizador
-void Ball::draw(SDL_Renderer * renderer) {
+void Ball::draw(SDL_Renderer *renderer)
+{
     // Definir a cor da bola
     SDL_SetRenderDrawColor(renderer, _color.r, _color.g, _color.b, _color.a);
 
@@ -15,7 +16,8 @@ void Ball::draw(SDL_Renderer * renderer) {
     offsety = _radius;
     d = _radius - 1;
 
-    while (offsety >= offsetx) {
+    while (offsety >= offsetx)
+    {
         SDL_RenderDrawLine(renderer, _x - offsety, _y + offsetx, _x + offsety,
                            _y + offsetx);
         SDL_RenderDrawLine(renderer, _x - offsetx, _y + offsety, _x + offsetx,
@@ -25,13 +27,18 @@ void Ball::draw(SDL_Renderer * renderer) {
         SDL_RenderDrawLine(renderer, _x - offsety, _y - offsetx, _x + offsety,
                            _y - offsetx);
 
-        if (d >= 2 * offsetx) {
+        if (d >= 2 * offsetx)
+        {
             d -= 2 * offsetx + 1;
             offsetx += 1;
-        } else if (d < 2 * (_radius - offsety)) {
+        }
+        else if (d < 2 * (_radius - offsety))
+        {
             d += 2 * offsety - 1;
             offsety -= 1;
-        } else {
+        }
+        else
+        {
             d += 2 * (offsety - offsetx - 1);
             offsety -= 1;
             offsetx += 1;
@@ -40,19 +47,26 @@ void Ball::draw(SDL_Renderer * renderer) {
 }
 
 // Função para mover a bola
-void Ball::move() {
-    if (_y > (SCREEN_HEIGHT - _radius) || _y < (0 + _radius)) invertY();
-    if (_x > (SCREEN_WIDTH - _radius) || _x < (0 + _radius)) invertX();
+void Ball::move()
+{
+    if (!isCatch)
+    {
+        if (_y > (SCREEN_HEIGHT - _radius) || _y < (0 + _radius))
+            invertY();
+        if (_x > (SCREEN_WIDTH - _radius) || _x < (0 + _radius))
+            invertX();
 
-    _x += static_cast<int>(_dx);
-    _y += static_cast<int>(_dy);
+        _x += static_cast<int>(_dx);
+        _y += static_cast<int>(_dy);
 
-    _dx = _dx * DECAY_FACTOR;
-    _dy = _dy * DECAY_FACTOR;
+        _dx = _dx * DECAY_FACTOR;
+        _dy = _dy * DECAY_FACTOR;
+    }
 }
 
 // Função para definir a velocidade da bola
-void Ball::setSpeed(int dx, int dy) {
+void Ball::setSpeed(int dx, int dy)
+{
     _dx = dx;
     _dy = dy;
 }
@@ -80,7 +94,16 @@ void Ball::invertX() { _dx = -_dx; }
 
 void Ball::invertY() { _dy = -_dy; }
 
-void Ball::setPosition(int x, int y) {
+void Ball::setPosition(int x, int y)
+{
     _x = x;
     _y = y;
 }
+
+void Ball::setIsCatch(bool wasCatch) { isCatch = wasCatch; }
+
+bool Ball::getIsCatch() { return isCatch; }
+
+bool Ball::getJustBeenThrow() { return justBeenThrow; }
+
+void Ball::setJustBeenThrow(bool justBeenThrow) { this->justBeenThrow = justBeenThrow; }
