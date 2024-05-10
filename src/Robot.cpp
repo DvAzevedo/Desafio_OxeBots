@@ -2,18 +2,15 @@
 
 using namespace std;
 
-constexpr float DECAY_FACTOR = 0.9f;
-constexpr int MOVE_SPEED = 5;
-constexpr int ROBOT_SIZE = 20;
-
 Robot::Robot(SDL_Color color, int x, int y)
-: velocity(1),
-  velocityMax(5),
-  acceleration(0.5),
+: changingDirection(false),
   moving(false),
+  acceleration(0.5),
   angle(0),
-  direction(1),
-  changingDirection(false) {
+  velocity(1),
+  velocityMax(5),
+  direction(1)
+{
     this->x = x;
     this->y = y;
 
@@ -23,14 +20,16 @@ Robot::Robot(SDL_Color color, int x, int y)
     this->rotatedBody = body;
 }
 
-void Robot::Move() {
+void Robot::Move()
+{
     setVelocity();
 
-    int x_v = static_cast<int>(velocity * cos(angle)) * direction;
+    int x_v = static_cast<int>(velocity * cos(angle)) * direction * !stopX;
 
-    int y_v = static_cast<int>(velocity * sin(angle)) * direction;
+    int y_v = static_cast<int>(velocity * sin(angle)) * direction * !stopY;
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++)
+    {
         if (body.points[i].x + x_v <= 5) x_v = 0;
         if (body.points[i].x + x_v >= SCREEN_WIDTH - 5) x_v = 0;
         if (body.points[i].y + y_v <= 5) y_v = 0;
@@ -40,31 +39,41 @@ void Robot::Move() {
     x += x_v;
     y += y_v;
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++)
+    {
         body.points[i].x += x_v;
         body.points[i].y += y_v;
     }
 
     Rotate(angle);
+    stopX = false;
+    stopY = false;
 }
 
-void Robot::Draw(SDL_Renderer * renderer) {
+void Robot::Draw(SDL_Renderer * renderer)
+{
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_Color orange = {255, 165, 0, 255};
 
     SDL_Point points_to_draw[5];
 
-    for (int i = 0; i < 4; i++) {
-        points_to_draw[i] = rotatedBody.points[i];
-    }
+    for (int i = 0; i < 4; i++) points_to_draw[i] = rotatedBody.points[i];
+
     points_to_draw[4] = rotatedBody.points[0];
 
     SDL_RenderDrawLines(renderer, points_to_draw, 5);
-    // TODO Draw the robot's face, and infill the rectangle
+
+    SDL_SetRenderDrawColor(renderer, orange.r, orange.g, orange.b, orange.a);
+    SDL_Point head[2] = {points_to_draw[1], points_to_draw[2]};
+    SDL_RenderDrawLines(renderer, head, 2);
 }
 
-void Robot::setMove(SDL_Event & e) {
-    if (e.type == SDL_KEYDOWN) {
-        switch (e.key.keysym.sym) {
+void Robot::setMove(SDL_Event & e)
+{
+    if (e.type == SDL_KEYDOWN)
+    {
+        switch (e.key.keysym.sym)
+        {
             case SDLK_SPACE:
                 if (moving)
                     Stop();
@@ -86,22 +95,29 @@ void Robot::setMove(SDL_Event & e) {
         }
     }
 }
-void Robot::Forward() {
-    if (getDirection() == -1) {
+void Robot::Forward()
+{
+    if (getDirection() == -1)
+    {
         isChangingDirection(true);
     }
 }
-void Robot::Backward() {
-    if (getDirection() == 1) {
+void Robot::Backward()
+{
+    if (getDirection() == 1)
+    {
         isChangingDirection(true);
     }
 }
 void Robot::accelerate() { set_if_it_is_moving(true); }
 void Robot::Stop() { set_if_it_is_moving(false); }
+void Robot::StopX() { stopX = true; }
+void Robot::StopY() { stopY = true; }
 void Robot::turnRight() { angle += 0.1f; }
 void Robot::turnLeft() { angle -= 0.1f; }
 
-void Robot::SetPosition(int x, int y) {
+void Robot::SetPosition(int x, int y)
+{
     this->x = x;
     this->y = y;
 
@@ -109,15 +125,23 @@ void Robot::SetPosition(int x, int y) {
 }
 void Robot::userSetVelocity(double velocity) { this->velocity = velocity; }
 
-void Robot::setVelocity() {
-    if (changingDirection) {
+void Robot::setVelocity()
+{
+    if (changingDirection)
+    {
         changeDirection();
-    } else if (moving) {
-        if (velocity * velocity < velocityMax * velocityMax) {
+    }
+    else if (moving)
+    {
+        if (velocity * velocity < velocityMax * velocityMax)
+        {
             velocity = (velocity + acceleration);
         }
-    } else {  // freiando
-        if (velocity > 0) {
+    }
+    else
+    {  // freiando
+        if (velocity > 0)
+        {
             velocity -= 1;
         }
     }
@@ -125,17 +149,21 @@ void Robot::setVelocity() {
 
 void Robot::set_if_it_is_moving(bool moving) { this->moving = moving; }
 
-void Robot::setAcceleration(double acceleration) {
+void Robot::setAcceleration(double acceleration)
+{
     this->acceleration = acceleration;
 }
 
-void Robot::isChangingDirection(bool changingDirection) {
+void Robot::isChangingDirection(bool changingDirection)
+{
     this->changingDirection = changingDirection;
 }
 
-void Robot::changeDirection() {
+void Robot::changeDirection()
+{
     velocity -= acceleration;
-    if (velocity <= 0) {
+    if (velocity <= 0)
+    {
         velocity = 0;
         direction = direction * (-1);
         changingDirection = false;
@@ -154,23 +182,22 @@ int Robot::GetX() { return x; }
 
 int Robot::GetY() { return y; }
 
-SDL_Point RotatePoint(SDL_Point point, double angle, SDL_Point pivot) {
-    SDL_Point new_point;
-    new_point.x = (point.x - pivot.x) * cos(angle) -
-                  (point.y - pivot.y) * sin(angle) + pivot.x;
-    new_point.y = (point.x - pivot.x) * sin(angle) +
-                  (point.y - pivot.y) * cos(angle) + pivot.y;
+double Robot::getVelocityX() { return velocity * cos(angle); }
 
-    return new_point;
-}
+double Robot::getVelocityY() { return velocity * sin(angle); }
 
-void Robot::Rotate(double angle) {
-    for (int i = 0; i < 4; i++) {
+RobotBody Robot::getBody() { return rotatedBody; }
+
+void Robot::Rotate(double angle)
+{
+    for (int i = 0; i < 4; i++)
+    {
         rotatedBody.points[i] = RotatePoint(body.points[i], angle, {x, y});
     }
 }
 
-void Robot::SetBodyPosition(int x, int y) {
+void Robot::SetBodyPosition(int x, int y)
+{
     body.points[0] = {x - ROBOT_SIZE, y - ROBOT_SIZE};
     body.points[1] = {x + ROBOT_SIZE, y - ROBOT_SIZE};
     body.points[2] = {x + ROBOT_SIZE, y + ROBOT_SIZE};

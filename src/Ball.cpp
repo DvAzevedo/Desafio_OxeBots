@@ -1,7 +1,4 @@
 #include "../include/Ball.hpp"
-// Fator de decaimento da velocidade da bola, a cada iteração a velocidade é
-// multiplicada por esse fator para simular a perda de energia
-constexpr float DECAY_FACTOR = 0.99f;
 
 // Construtor para definir posição e raio
 Ball::Ball(int x, int y, int radius, SDL_Color color)
@@ -44,8 +41,8 @@ void Ball::draw(SDL_Renderer * renderer) {
 
 // Função para mover a bola
 void Ball::move() {
-    if (_y > (SCREEN_HEIGHT - _radius) || _y < (0 + _radius)) _dy *= -1;
-    if (_x > (SCREEN_WIDTH - _radius) || _x < (0 + _radius)) _dx *= -1;
+    if (_y > (SCREEN_HEIGHT - _radius) || _y < (0 + _radius)) invertY();
+    if (_x > (SCREEN_WIDTH - _radius) || _x < (0 + _radius)) invertX();
 
     _x += static_cast<int>(_dx);
     _y += static_cast<int>(_dy);
@@ -69,6 +66,12 @@ int Ball::getX() { return _x; }
 // Função para obter a posição y da bola
 int Ball::getY() { return _y; }
 
+// Função para obter a velocidade x da bola
+double Ball::getDX() { return _dx; }
+
+// Função para obter a velocidade y da bola
+double Ball::getDY() { return _dy; }
+
 // Função para obter o raio da bola
 int Ball::getRadius() { return _radius; }
 
@@ -76,3 +79,8 @@ int Ball::getRadius() { return _radius; }
 void Ball::invertX() { _dx = -_dx; }
 
 void Ball::invertY() { _dy = -_dy; }
+
+void Ball::setPosition(int x, int y) {
+    _x = x;
+    _y = y;
+}

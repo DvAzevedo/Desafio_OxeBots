@@ -2,8 +2,6 @@
 
 using namespace std;
 
-#undef main
-
 int main() {
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -35,13 +33,15 @@ int main() {
 
     SDL_Color red = {200, 0, 0, 255};
     SDL_Color blue = {0, 0, 200, 255};
+    SDL_Color green = {0, 200, 0, 255};
 
     Ball ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 10, red);
-
     Robot robot1(blue, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2);
+    Robot robot2(green, SCREEN_WIDTH / 2 + 100, SCREEN_HEIGHT / 2);
 
-    ball.setSpeed(-10, -10);
-    robot1.SetAngle(M_PI / 4);
+    Colisions colisions(ball, {&robot1, &robot2});
+
+    ball.setSpeed(0, 0);
 
     bool quit = false;
     SDL_Event e;
@@ -50,9 +50,16 @@ int main() {
         field.draw(renderer);
         ball.draw(renderer);
         robot1.Draw(renderer);
+        robot2.Draw(renderer);
+
+        // Verifica colisões
+        colisions.checkColisions();
 
         ball.move();
         robot1.Move();
+        robot2.Move();
+
+        colisions.checkColisions();
 
         // Atualizar a tela
         SDL_RenderPresent(renderer);
