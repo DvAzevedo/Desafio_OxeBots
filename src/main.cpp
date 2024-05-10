@@ -42,6 +42,7 @@ int main()
     Ball ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 10, red);
     Robot robot1(blue, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2);
     Robot robot2(green, SCREEN_WIDTH / 2 + 100, SCREEN_HEIGHT / 2);
+    robot2.setAngle(M_2_PI + 2.5F);
 
     Colisions colisions(ball, {&robot1, &robot2});
 
