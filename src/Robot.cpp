@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Robot::Robot(SDL_Color color, int x, int y)
+Robot::Robot(SDL_Color color, int x, int y, int player)
     : changingDirection(false),
       moving(false),
       acceleration(0.5),
@@ -11,10 +11,13 @@ Robot::Robot(SDL_Color color, int x, int y)
       velocityMax(5),
       direction(1),
       withBall(false),
-      throwBall(false)
+      throwBall(false),
+      xThrowSpeed(10),
+      yThrowSpeed(10)
 {
     this->x = x;
     this->y = y;
+    this->player = player;
 
     this->color = color;
     setBodyPosition(x, y);
@@ -29,6 +32,9 @@ void Robot::move()
     int x_v = static_cast<int>(velocity * cos(angle)) * direction * !stopX;
 
     int y_v = static_cast<int>(velocity * sin(angle)) * direction * !stopY;
+
+    xThrowSpeed = std::min(static_cast<int>(20 * cos(angle)), 20);
+    yThrowSpeed = std::min(static_cast<int>(20 * sin(angle)), 20);
 
     for (int i = 0; i < 4; i++)
     {
@@ -79,30 +85,65 @@ void Robot::setMove(SDL_Event &e)
 {
     if (e.type == SDL_KEYDOWN)
     {
-        switch (e.key.keysym.sym)
+        if (player == 1)
         {
-        case SDLK_SPACE:
-            if (moving)
-                stop();
-            else
-                accelerate();
-            break;
-        case SDLK_UP:
-            forward();
-            break;
-        case SDLK_DOWN:
-            backward();
-            break;
-        case SDLK_LEFT:
-            turnLeft();
-            break;
-        case SDLK_RIGHT:
-            turnRight();
-            break;
-        case SDLK_RETURN:
-            if (withBall)
-                throwBall = true;
-            break;
+            {
+                switch (e.key.keysym.sym)
+                {
+
+                case SDLK_SPACE:
+                    if (moving)
+                        stop();
+                    else
+                        accelerate();
+                    break;
+                case SDLK_UP:
+                    forward();
+                    break;
+                case SDLK_DOWN:
+                    backward();
+                    break;
+                case SDLK_LEFT:
+                    turnLeft();
+                    break;
+                case SDLK_RIGHT:
+                    turnRight();
+                    break;
+                case SDLK_RETURN:
+                    if (withBall)
+                        throwBall = true;
+                    break;
+                }
+            }
+        }
+        if (player == 2)
+        {
+            switch (e.key.keysym.sym)
+            {
+
+            case SDLK_f:
+                if (moving)
+                    stop();
+                else
+                    accelerate();
+                break;
+            case SDLK_w:
+                forward();
+                break;
+            case SDLK_s:
+                backward();
+                break;
+            case SDLK_a:
+                turnLeft();
+                break;
+            case SDLK_d:
+                turnRight();
+                break;
+            case SDLK_r:
+                if (withBall)
+                    throwBall = true;
+                break;
+            }
         }
     }
 }

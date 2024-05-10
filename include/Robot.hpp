@@ -19,7 +19,7 @@ struct RobotBody
 class Robot
 {
 public:
-    Robot(SDL_Color color, int x, int y);
+    Robot(SDL_Color color, int x, int y, int player);
     void setMove(SDL_Event &e);
     void move();
     void draw(SDL_Renderer *renderer);
@@ -67,6 +67,7 @@ public:
     bool getJustThrowBall();
 
 private:
+    int player;
     bool changingDirection;
     bool moving;
     bool stopX, stopY;
