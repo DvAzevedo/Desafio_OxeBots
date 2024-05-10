@@ -10,17 +10,19 @@
 #ifndef ROBOT_HPP
 #define ROBOT_HPP
 
-struct RobotBody {
+struct RobotBody
+{
     // 4 vertices of the robot box body
     SDL_Point points[4];
 };
 
-class Robot {
-   public:
+class Robot
+{
+public:
     Robot(SDL_Color color, int x, int y);
-    void setMove(SDL_Event & e);
+    void setMove(SDL_Event &e);
     void Move();
-    void Draw(SDL_Renderer * renderer);
+    void Draw(SDL_Renderer *renderer);
 
     void Forward();
     void Backward();
@@ -56,7 +58,7 @@ class Robot {
     double getVelocityY();
     RobotBody getBody();
 
-   private:
+private:
     bool changingDirection;
     bool moving;
     bool stopX, stopY;
@@ -74,4 +76,4 @@ class Robot {
     void SetBodyPosition(int x, int y);
 };
 
-#endif  // ROBOT_HPP
+#endif // ROBOT_HPP

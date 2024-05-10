@@ -2,6 +2,7 @@
 #define COLISIONS_HPP
 
 #include <SDL2/SDL.h>
+#include <math.h>
 
 #include <vector>
 
@@ -10,18 +11,19 @@
 #include "Robot.hpp"
 #include "Functions.hpp"
 
-class Colisions {
-   private:
-    Ball & ball;
+class Colisions
+{
+private:
+    Ball &ball;
     std::vector<Robot *> robots;
 
-   public:
-    Colisions(Ball & ball, std::vector<Robot *> robots);
+public:
+    Colisions(Ball &ball, std::vector<Robot *> robots);
     void checkColisions();
 
-   private:
+private:
     void checkBallColisions();
-    void checkBallRobotColisions(Robot * robot);
+    void checkBallRobotColisions(Robot *robot);
 };
 
-#endif  // COLISIONS_HPP
+#endif // COLISIONS_HPP
