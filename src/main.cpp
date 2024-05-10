@@ -54,15 +54,15 @@ int main()
         // Desenha o campo
         field.draw(renderer);
         ball.draw(renderer);
-        robot1.Draw(renderer);
-        robot2.Draw(renderer);
+        robot1.draw(renderer);
+        robot2.draw(renderer);
 
         // Verifica colisões
         colisions.checkColisions();
 
         ball.move();
-        robot1.Move();
-        robot2.Move();
+        robot1.move();
+        robot2.move();
 
         colisions.checkColisions();
 

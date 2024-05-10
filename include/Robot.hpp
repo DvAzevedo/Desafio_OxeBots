@@ -21,19 +21,19 @@ class Robot
 public:
     Robot(SDL_Color color, int x, int y);
     void setMove(SDL_Event &e);
-    void Move();
-    void Draw(SDL_Renderer *renderer);
+    void move();
+    void draw(SDL_Renderer *renderer);
 
-    void Forward();
-    void Backward();
-    void Stop();
+    void forward();
+    void backward();
+    void stop();
     void accelerate();
     void turnRight();
     void turnLeft();
-    void StopX();
-    void StopY();
+    void stopXf();
+    void stopYf();
 
-    void SetPosition(int x, int y);
+    void setPosition(int x, int y);
 
     void userSetVelocity(double velocity);
 
@@ -45,15 +45,15 @@ public:
 
     void changeDirection();
 
-    void SetAngle(double angle);
+    void setAngle(double angle);
 
     void set_if_it_is_moving(bool);
 
     double getAcceleration();
-    double GetAngle();
+    double getAngle();
     int getDirection();
-    int GetX();
-    int GetY();
+    int getX();
+    int getY();
     double getVelocityX();
     double getVelocityY();
     RobotBody getBody();
@@ -72,8 +72,8 @@ private:
     RobotBody rotatedBody;
     SDL_Color color;
 
-    void Rotate(double angle);
-    void SetBodyPosition(int x, int y);
+    void rotate(double angle);
+    void setBodyPosition(int x, int y);
 };
 
 #endif // ROBOT_HPP
