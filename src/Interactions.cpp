@@ -1,5 +1,5 @@
 #include "../include/Interactions.hpp"
-
+using namespace std;
 Interactions::Interactions(Ball &ball, std::vector<Robot *> const robots)
     : ball(ball), robots(robots)
 {
@@ -7,11 +7,30 @@ Interactions::Interactions(Ball &ball, std::vector<Robot *> const robots)
 
 void Interactions::robotsCatchBall()
 {
-    for (auto robot : robots)
-        if (robotCatchBall(robot))
+    for (size_t i = 0; i < robots.size(); ++i)
+    {
+        int j = (i + 1) % robots.size();
+        if (!(robots[j]->getWithBall()))
+            robotCatchBall(robots[i]);
+    }
+}
+
+void Interactions::robotCatchBall(Robot *robot)
+{
+    if (itIsClose(robot->getX(), ball.getX()) && itIsClose(robot->getY(), ball.getY()))
+    {
+
+        if (!(robot->getJustThrowBall()))
         {
-            break;
+            ball.setPosition(robot->getX(), robot->getY());
+            ball.setIsCatch(true);
+            robot->setWithBall(true);
         }
+    }
+    else
+    {
+        robot->setJustThrowBall(false);
+    }
 }
 
 bool Interactions::itIsClose(double a, double b)
@@ -24,22 +43,19 @@ bool Interactions::itIsClose(double a, double b)
     return false;
 }
 
-bool Interactions::robotCatchBall(Robot *robot)
+void Interactions::robotsThrowBall()
 {
-    if (itIsClose(robot->getX(), ball.getX()) && itIsClose(robot->getY(), ball.getY()))
+    for (auto robot : robots)
+        robotThrowBall(robot);
+}
+void Interactions::robotThrowBall(Robot *robot)
+{
+    if (robot->getWithBall() && robot->getThrowBall())
     {
-
-        if (!(robot->getJustThrowBall()))
-        {
-            ball.setPosition(robot->getX(), robot->getY());
-            ball.setIsCatch(true);
-            robot->setWithBall(true);
-            return true;
-        }
+        robot->setThrowBall(false);
+        robot->setWithBall(false);
+        robot->setJustThrowBall(true);
+        ball.setIsCatch(false);
+        ball.setSpeed(robot->getXThrowSpeed(), robot->getYThrowSpeed());
     }
-    else
-    {
-        robot->setJustThrowBall(false);
-    }
-    return false;
 }

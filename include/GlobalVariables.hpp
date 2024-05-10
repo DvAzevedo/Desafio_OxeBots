@@ -2,7 +2,7 @@
 
 // Fator de decaimento da velocidade da bola, a cada iteração a velocidade é
 // multiplicada por esse fator para simular a perda de energia
-constexpr float DECAY_FACTOR = 0.9f;
+constexpr float DECAY_FACTOR = 0.99f;
 constexpr int MOVE_SPEED = 5;
 constexpr int MS_PER_FRAME = 16; // ~60 FPS
 constexpr int ROBOT_SIZE = 20;

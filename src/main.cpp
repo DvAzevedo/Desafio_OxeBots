@@ -40,8 +40,8 @@ int main()
     SDL_Color green = {0, 200, 0, 255};
 
     Ball ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 10, red);
-    Robot robot1(blue, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2);
-    Robot robot2(green, SCREEN_WIDTH / 2 + 100, SCREEN_HEIGHT / 2);
+    Robot robot1(blue, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2, 1);
+    Robot robot2(green, SCREEN_WIDTH / 2 + 100, SCREEN_HEIGHT / 2, 2);
     robot2.setAngle(M_2_PI + 2.5F);
 
     Colisions colisions(ball, {&robot1, &robot2});
@@ -53,6 +53,7 @@ int main()
     SDL_Event e;
     while (!quit)
     {
+        Interactions.robotsThrowBall();
         // Desenha o campo
         field.draw(renderer);
         ball.draw(renderer);
@@ -86,6 +87,7 @@ int main()
             else if (e.type == SDL_KEYDOWN)
             {
                 robot1.setMove(e);
+                robot2.setMove(e);
             }
         }
     }
