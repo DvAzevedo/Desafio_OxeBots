@@ -51,9 +51,9 @@ void Ball::move()
 {
     if (!isCatch)
     {
-        if (_y > (SCREEN_HEIGHT - _radius) || _y < (0 + _radius))
+        if (_y > (FIELD_HEIGHT + DIFERENCE_SCREEN_FIELD_HEIGHT - _radius) || _y < (DIFERENCE_SCREEN_FIELD_HEIGHT + _radius))
             invertY();
-        if (_x > (SCREEN_WIDTH - _radius) || _x < (0 + _radius))
+        if (_x > (FIELD_WIDTH - _radius) || _x < (0 + _radius))
             invertX();
 
         _x += static_cast<int>(_dx);

@@ -36,7 +36,7 @@ void Interactions::robotCatchBall(Robot *robot)
 bool Interactions::itIsClose(double a, double b)
 {
     double distancia = a - b;
-    if ((distancia * distancia) <= 400)
+    if ((distancia * distancia) <= DISTANCE_TO_CATCH)
     {
         return true;
     }

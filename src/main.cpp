@@ -33,15 +33,15 @@ int main()
         return 1;
     }
 
-    Field field(SCREEN_WIDTH, SCREEN_HEIGHT);
+    Field field(FIELD_WIDTH, FIELD_HEIGHT);
 
     SDL_Color red = {200, 0, 0, 255};
     SDL_Color blue = {0, 0, 200, 255};
     SDL_Color green = {0, 200, 0, 255};
 
-    Ball ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 10, red);
-    Robot robot1(blue, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2, 1);
-    Robot robot2(green, SCREEN_WIDTH / 2 + 100, SCREEN_HEIGHT / 2, 2);
+    Ball ball(FIELD_WIDTH / 2, FIELD_HEIGHT / 2 + DIFERENCE_SCREEN_FIELD_HEIGHT, 10, red);
+    Robot robot1(blue, FIELD_WIDTH / 2 - 100, FIELD_HEIGHT / 2 + DIFERENCE_SCREEN_FIELD_HEIGHT, 1);
+    Robot robot2(green, FIELD_WIDTH / 2 + 100, FIELD_HEIGHT / 2 + DIFERENCE_SCREEN_FIELD_HEIGHT, 2);
     robot2.setAngle(M_2_PI + 2.5F);
 
     Colisions colisions(ball, {&robot1, &robot2});

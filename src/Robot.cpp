@@ -40,11 +40,11 @@ void Robot::move()
     {
         if (body.points[i].x + x_v <= 5)
             x_v = 0;
-        if (body.points[i].x + x_v >= SCREEN_WIDTH - 5)
+        if (body.points[i].x + x_v >= FIELD_WIDTH - 5)
             x_v = 0;
-        if (body.points[i].y + y_v <= 5)
+        if (body.points[i].y + y_v <= 55)
             y_v = 0;
-        if (body.points[i].y + y_v >= SCREEN_HEIGHT - 5)
+        if (body.points[i].y + y_v >= FIELD_HEIGHT + DIFERENCE_SCREEN_FIELD_HEIGHT - 5)
             y_v = 0;
     }
 
