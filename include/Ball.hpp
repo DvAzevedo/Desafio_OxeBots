@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <math.h>
+#include <iostream>
 #include "GlobalVariables.hpp"
 
 class Ball
@@ -44,10 +45,12 @@ public:
     bool getIsCatch();
     bool getJustBeenThrow();
     void setJustBeenThrow(bool justBeenThrow);
+    void reset();
 
 private:
     int _x;
     int _y;
+    int startX, startY;
     int const _radius;
     SDL_Color _color;
     bool isCatch;

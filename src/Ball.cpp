@@ -1,9 +1,18 @@
 #include "../include/Ball.hpp"
 
+using namespace std;
+
 // Construtor para definir posição e raio
 Ball::Ball(int x, int y, int radius, SDL_Color color)
-    : _x(x), _y(y), _radius(radius), _color(color), _dx(0), _dy(0), isCatch(false) {}
+    : _x(x), _y(y), startX(x), startY(y), _radius(radius), _color(color), _dx(0), _dy(0), isCatch(false) {}
 
+void Ball::reset()
+{
+    _x = startX;
+    _y = startY;
+    _dx = 0;
+    _dy = 0;
+}
 // Função para desenhar a bola no renderizador
 void Ball::draw(SDL_Renderer *renderer)
 {
@@ -51,10 +60,10 @@ void Ball::move()
 {
     if (!isCatch)
     {
-        if (_y > (FIELD_HEIGHT + DIFERENCE_SCREEN_FIELD_HEIGHT - _radius) || _y < (DIFERENCE_SCREEN_FIELD_HEIGHT + _radius))
-            invertY();
-        if (_x > (FIELD_WIDTH - _radius) || _x < (0 + _radius))
+        if (_x > (SIDE_MARGIN + FIELD_WIDTH - _radius) || _x < (SIDE_MARGIN + _radius))
             invertX();
+        if (_y > (TOP_MARGIN + FIELD_HEIGHT - _radius) || _y < (TOP_MARGIN + _radius))
+            invertY();
 
         _x += static_cast<int>(_dx);
         _y += static_cast<int>(_dy);
