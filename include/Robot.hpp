@@ -10,28 +10,30 @@
 #ifndef ROBOT_HPP
 #define ROBOT_HPP
 
-struct RobotBody {
+struct RobotBody
+{
     // 4 vertices of the robot box body
     SDL_Point points[4];
 };
 
-class Robot {
-   public:
-    Robot(SDL_Color color, int x, int y);
-    void setMove(SDL_Event & e);
-    void Move();
-    void Draw(SDL_Renderer * renderer);
+class Robot
+{
+public:
+    Robot(SDL_Color color, int x, int y, double angle, int player);
+    void setMove(SDL_Event &e);
+    void move();
+    void draw(SDL_Renderer *renderer);
 
-    void Forward();
-    void Backward();
-    void Stop();
+    void forward();
+    void backward();
+    void stop();
     void accelerate();
     void turnRight();
     void turnLeft();
-    void StopX();
-    void StopY();
+    void stopXf();
+    void stopYf();
 
-    void SetPosition(int x, int y);
+    void setPosition(int x, int y);
 
     void userSetVelocity(double velocity);
 
@@ -43,20 +45,31 @@ class Robot {
 
     void changeDirection();
 
-    void SetAngle(double angle);
+    void setAngle(double angle);
 
     void set_if_it_is_moving(bool);
 
     double getAcceleration();
-    double GetAngle();
+    double getAngle();
     int getDirection();
-    int GetX();
-    int GetY();
+    int getX();
+    int getY();
     double getVelocityX();
     double getVelocityY();
     RobotBody getBody();
+    double getXThrowSpeed();
+    double getYThrowSpeed();
+    void setWithBall(bool caughtBall);
+    void setThrowBall(bool throwBall);
+    void setJustThrowBall(bool justThrowBall);
+    bool getWithBall();
+    bool getThrowBall();
+    bool getJustThrowBall();
+    void reset();
+    void setBodyPosition(int x, int y);
 
-   private:
+private:
+    int player;
     bool changingDirection;
     bool moving;
     bool stopX, stopY;
@@ -66,12 +79,17 @@ class Robot {
     double velocityMax;
     int direction;
     int x, y;
+    int startX, startY;
+    double startAngle;
     RobotBody body;
     RobotBody rotatedBody;
     SDL_Color color;
+    double xThrowSpeed, yThrowSpeed;
+    bool withBall;
+    bool throwBall;
+    bool justThrowBall;
 
-    void Rotate(double angle);
-    void SetBodyPosition(int x, int y);
+    void rotate(double angle);
 };
 
-#endif  // ROBOT_HPP
+#endif // ROBOT_HPP

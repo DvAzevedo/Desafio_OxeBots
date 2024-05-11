@@ -2,6 +2,7 @@
 #define MAIN_HPP
 
 #include <SDL2/SDL.h>
+#include <math.h>
 
 #include <iostream>
 
@@ -10,5 +11,7 @@
 #include "Field.hpp"
 #include "GlobalVariables.hpp"
 #include "Robot.hpp"
+#include "Interactions.hpp"
+#include "Score.hpp"
 
-#endif  //  MAIN_HPP
+#endif //  MAIN_HPP

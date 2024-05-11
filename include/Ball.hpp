@@ -2,16 +2,18 @@
 #define BALL_H
 
 #include <SDL2/SDL.h>
-
+#include <math.h>
+#include <iostream>
 #include "GlobalVariables.hpp"
 
-class Ball {
-   public:
+class Ball
+{
+public:
     // Construtor para definir posição, raio e cor
     Ball(int x, int y, int radius, SDL_Color color);
 
     // Função para desenhar a bola no renderizador
-    void draw(SDL_Renderer * renderer);
+    void draw(SDL_Renderer *renderer);
 
     // Função para mover a bola
     void move();
@@ -39,11 +41,20 @@ class Ball {
     // Função para definir a posição da bola
     void setPosition(int x, int y);
 
+    void setIsCatch(bool wasCatch);
+    bool getIsCatch();
+    bool getJustBeenThrow();
+    void setJustBeenThrow(bool justBeenThrow);
+    void reset();
+
 private:
     int _x;
     int _y;
+    int startX, startY;
     int const _radius;
     SDL_Color _color;
+    bool isCatch;
+    bool justBeenThrow;
 
     // velocidade da bola
     float _dx;

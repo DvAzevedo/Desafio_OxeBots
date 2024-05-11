@@ -1,65 +1,78 @@
 #include "../include/main.hpp"
 
 using namespace std;
-
-int main() {
+#undef main
+int main()
+{
     // Initialize SDL
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
         std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError()
                   << std::endl;
         return 1;
     }
 
-    SDL_Window * window = SDL_CreateWindow(
-      "Desafio OxeBots Equipe 1", SDL_WINDOWPOS_UNDEFINED,
-      SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    SDL_Window *window = SDL_CreateWindow(
+        "Desafio OxeBots Equipe 1", SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
-    if (window == NULL) {
+    if (window == NULL)
+    {
         std::cerr << "A janela não pôde ser criada! SDL_Error: "
                   << SDL_GetError() << std::endl;
         return 1;
     }
 
-    SDL_Renderer * renderer =
-      SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_Renderer *renderer =
+        SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-    if (renderer == NULL) {
+    if (renderer == NULL)
+    {
         std::cerr << "Não foi possível criar o renderizador! SDL_Error: "
                   << SDL_GetError() << std::endl;
         return 1;
     }
 
-    Field field(SCREEN_WIDTH, SCREEN_HEIGHT);
+    Field field(FIELD_WIDTH, FIELD_HEIGHT);
 
     SDL_Color red = {200, 0, 0, 255};
     SDL_Color blue = {0, 0, 200, 255};
     SDL_Color green = {0, 200, 0, 255};
 
-    Ball ball(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 10, red);
-    Robot robot1(blue, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2);
-    Robot robot2(green, SCREEN_WIDTH / 2 + 100, SCREEN_HEIGHT / 2);
+    Ball ball(SIDE_MARGIN + FIELD_WIDTH / 2, FIELD_HEIGHT / 2 + TOP_MARGIN, 10, red);
+    Robot robot1(blue, SIDE_MARGIN + FIELD_WIDTH / 2 - 100, FIELD_HEIGHT / 2 + TOP_MARGIN, 0, 1);
+    Robot robot2(green, SIDE_MARGIN + FIELD_WIDTH / 2 + 100, FIELD_HEIGHT / 2 + TOP_MARGIN, M_2_PI + 2.5F, 2);
+    // robot2.setAngle(M_2_PI + 2.5F);
 
     Colisions colisions(ball, {&robot1, &robot2});
+    Interactions Interactions(ball, {&robot1, &robot2});
+    Score Score(ball, {&robot1, &robot2});
 
     ball.setSpeed(0, 0);
 
     bool quit = false;
     SDL_Event e;
-    while (!quit) {
+    while (!quit)
+    {
+        Interactions.robotsThrowBall();
+
         // Desenha o campo
         field.draw(renderer);
         ball.draw(renderer);
-        robot1.Draw(renderer);
-        robot2.Draw(renderer);
+        robot1.draw(renderer);
+        robot2.draw(renderer);
+        Score.updateScore();
 
         // Verifica colisões
-        colisions.checkColisions();
+        // colisions.checkColisions();
 
         ball.move();
-        robot1.Move();
-        robot2.Move();
+        robot1.move();
+        robot2.move();
 
-        colisions.checkColisions();
+        Interactions.robotsCatchBall();
+
+        // colisions.checkColisions();
 
         // Atualizar a tela
         SDL_RenderPresent(renderer);
@@ -68,11 +81,16 @@ int main() {
         SDL_Delay(MS_PER_FRAME);
 
         // Processa os eventos
-        while (SDL_PollEvent(&e) != 0) {
-            if (e.type == SDL_QUIT) {
+        while (SDL_PollEvent(&e) != 0)
+        {
+            if (e.type == SDL_QUIT)
+            {
                 quit = true;
-            } else if (e.type == SDL_KEYDOWN) {
+            }
+            else if (e.type == SDL_KEYDOWN)
+            {
                 robot1.setMove(e);
+                robot2.setMove(e);
             }
         }
     }

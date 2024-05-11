@@ -2,25 +2,43 @@
 
 using namespace std;
 
-Robot::Robot(SDL_Color color, int x, int y)
-: changingDirection(false),
-  moving(false),
-  acceleration(0.5),
-  angle(0),
-  velocity(1),
-  velocityMax(5),
-  direction(1)
+Robot::Robot(SDL_Color color, int x, int y, double angle, int player)
+    : changingDirection(false),
+      moving(false),
+      acceleration(0.5),
+      angle(angle),
+      velocity(1),
+      velocityMax(5),
+      direction(1),
+      withBall(false),
+      throwBall(false),
+      xThrowSpeed(10),
+      yThrowSpeed(10),
+      startX(x),
+      startY(y),
+      startAngle(angle)
 {
     this->x = x;
     this->y = y;
+    this->player = player;
 
     this->color = color;
-    SetBodyPosition(x, y);
+    setBodyPosition(x, y);
 
     this->rotatedBody = body;
 }
+void Robot::reset()
+{
+    changingDirection = false;
+    moving = false;
+    withBall = false;
+    throwBall = false;
+    velocity = 0;
+    setPosition(startX, startY);
+    angle = startAngle;
+}
 
-void Robot::Move()
+void Robot::move()
 {
     setVelocity();
 
@@ -28,12 +46,19 @@ void Robot::Move()
 
     int y_v = static_cast<int>(velocity * sin(angle)) * direction * !stopY;
 
+    xThrowSpeed = std::min(static_cast<int>(20 * cos(angle)), 20);
+    yThrowSpeed = std::min(static_cast<int>(20 * sin(angle)), 20);
+
     for (int i = 0; i < 4; i++)
     {
-        if (body.points[i].x + x_v <= 5) x_v = 0;
-        if (body.points[i].x + x_v >= SCREEN_WIDTH - 5) x_v = 0;
-        if (body.points[i].y + y_v <= 5) y_v = 0;
-        if (body.points[i].y + y_v >= SCREEN_HEIGHT - 5) y_v = 0;
+        if (body.points[i].x + x_v <= SIDE_MARGIN + 5)
+            x_v = 0;
+        if (body.points[i].x + x_v >= SIDE_MARGIN + FIELD_WIDTH - 5)
+            x_v = 0;
+        if (body.points[i].y + y_v <= 55)
+            y_v = 0;
+        if (body.points[i].y + y_v >= FIELD_HEIGHT + TOP_MARGIN - 5)
+            y_v = 0;
     }
 
     x += x_v;
@@ -45,19 +70,20 @@ void Robot::Move()
         body.points[i].y += y_v;
     }
 
-    Rotate(angle);
+    rotate(angle);
     stopX = false;
     stopY = false;
 }
 
-void Robot::Draw(SDL_Renderer * renderer)
+void Robot::draw(SDL_Renderer *renderer)
 {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_Color orange = {255, 165, 0, 255};
 
     SDL_Point points_to_draw[5];
 
-    for (int i = 0; i < 4; i++) points_to_draw[i] = rotatedBody.points[i];
+    for (int i = 0; i < 4; i++)
+        points_to_draw[i] = rotatedBody.points[i];
 
     points_to_draw[4] = rotatedBody.points[0];
 
@@ -68,41 +94,80 @@ void Robot::Draw(SDL_Renderer * renderer)
     SDL_RenderDrawLines(renderer, head, 2);
 }
 
-void Robot::setMove(SDL_Event & e)
+void Robot::setMove(SDL_Event &e)
 {
     if (e.type == SDL_KEYDOWN)
     {
-        switch (e.key.keysym.sym)
+        if (player == 1)
         {
-            case SDLK_SPACE:
+            {
+                switch (e.key.keysym.sym)
+                {
+
+                case SDLK_SPACE:
+                    if (moving)
+                        stop();
+                    else
+                        accelerate();
+                    break;
+                case SDLK_UP:
+                    forward();
+                    break;
+                case SDLK_DOWN:
+                    backward();
+                    break;
+                case SDLK_LEFT:
+                    turnLeft();
+                    break;
+                case SDLK_RIGHT:
+                    turnRight();
+                    break;
+                case SDLK_RETURN:
+                    if (withBall)
+                        throwBall = true;
+                    break;
+                }
+            }
+        }
+        if (player == 2)
+        {
+            switch (e.key.keysym.sym)
+            {
+
+            case SDLK_f:
                 if (moving)
-                    Stop();
+                    stop();
                 else
                     accelerate();
                 break;
-            case SDLK_UP:
-                Forward();
+            case SDLK_w:
+                forward();
                 break;
-            case SDLK_DOWN:
-                Backward();
+            case SDLK_s:
+                backward();
                 break;
-            case SDLK_LEFT:
+            case SDLK_a:
                 turnLeft();
                 break;
-            case SDLK_RIGHT:
+            case SDLK_d:
                 turnRight();
                 break;
+            case SDLK_r:
+                if (withBall)
+                    throwBall = true;
+                break;
+            }
         }
     }
 }
-void Robot::Forward()
+void Robot::forward()
 {
     if (getDirection() == -1)
     {
         isChangingDirection(true);
     }
 }
-void Robot::Backward()
+void Robot::backward()
 {
     if (getDirection() == 1)
     {
@@ -110,18 +175,18 @@ void Robot::Backward()
     }
 }
 void Robot::accelerate() { set_if_it_is_moving(true); }
-void Robot::Stop() { set_if_it_is_moving(false); }
-void Robot::StopX() { stopX = true; }
-void Robot::StopY() { stopY = true; }
+void Robot::stop() { set_if_it_is_moving(false); }
+void Robot::stopXf() { stopX = true; }
+void Robot::stopYf() { stopY = true; }
 void Robot::turnRight() { angle += 0.1f; }
 void Robot::turnLeft() { angle -= 0.1f; }
 
-void Robot::SetPosition(int x, int y)
+void Robot::setPosition(int x, int y)
 {
     this->x = x;
     this->y = y;
 
-    SetBodyPosition(x, y);
+    setBodyPosition(x, y);
 }
 void Robot::userSetVelocity(double velocity) { this->velocity = velocity; }
 
@@ -139,7 +204,7 @@ void Robot::setVelocity()
         }
     }
     else
-    {  // freiando
+    { // freiando
         if (velocity > 0)
         {
             velocity -= 1;
@@ -170,17 +235,17 @@ void Robot::changeDirection()
     }
 }
 
-void Robot::SetAngle(double angle) { this->angle = angle; }
+void Robot::setAngle(double angle) { this->angle = angle; }
 
-double Robot::GetAngle() { return angle; }
+double Robot::getAngle() { return angle; }
 
 double Robot::getAcceleration() { return acceleration; }
 
 int Robot::getDirection() { return direction; }
 
-int Robot::GetX() { return x; }
+int Robot::getX() { return x; }
 
-int Robot::GetY() { return y; }
+int Robot::getY() { return y; }
 
 double Robot::getVelocityX() { return velocity * cos(angle); }
 
@@ -188,7 +253,7 @@ double Robot::getVelocityY() { return velocity * sin(angle); }
 
 RobotBody Robot::getBody() { return rotatedBody; }
 
-void Robot::Rotate(double angle)
+void Robot::rotate(double angle)
 {
     for (int i = 0; i < 4; i++)
     {
@@ -196,7 +261,7 @@ void Robot::Rotate(double angle)
     }
 }
 
-void Robot::SetBodyPosition(int x, int y)
+void Robot::setBodyPosition(int x, int y)
 {
     body.points[0] = {x - ROBOT_SIZE, y - ROBOT_SIZE};
     body.points[1] = {x + ROBOT_SIZE, y - ROBOT_SIZE};
@@ -204,23 +269,17 @@ void Robot::SetBodyPosition(int x, int y)
     body.points[3] = {x - ROBOT_SIZE, y + ROBOT_SIZE};
 }
 
-// move{
-//  velocity *= DECAY_FACTOR;
+double Robot::getXThrowSpeed() { return xThrowSpeed; }
+double Robot::getYThrowSpeed() { return yThrowSpeed; }
 
-// Clamp angle to -90 to 90 degrees, so the robot can only move forward and
-// backward
+void Robot::setWithBall(bool caughtBall) { withBall = caughtBall; }
 
-// if (angle > M_PI / 2)
-// {
-//     angle = M_PI / 2;
-// }
-// else if (angle < -M_PI / 2)
-// {
-//     angle = -M_PI / 2;
-// }
+void Robot::setThrowBall(bool throwBall) { this->throwBall = throwBall; }
 
-// if (velocity < 0.5)
-// {
-//     velocity = 0;
-// }
-//}
+bool Robot::getWithBall() { return withBall; }
+
+bool Robot::getThrowBall() { return throwBall; }
+
+void Robot::setJustThrowBall(bool justThrowBall) { this->justThrowBall = justThrowBall; }
+
+bool Robot::getJustThrowBall() { return justThrowBall; }
