@@ -61,7 +61,10 @@ void Ball::move()
     if (!isCatch)
     {
         if (_x > (SIDE_MARGIN + FIELD_WIDTH - _radius) || _x < (SIDE_MARGIN + _radius))
-            invertX();
+        {
+            if ((_y <= TOP_MARGIN + 3 * FIELD_HEIGHT / 8) || (_y >= TOP_MARGIN + 5 * FIELD_HEIGHT / 8))
+                invertX();
+        }
         if (_y > (TOP_MARGIN + FIELD_HEIGHT - _radius) || _y < (TOP_MARGIN + _radius))
             invertY();
 

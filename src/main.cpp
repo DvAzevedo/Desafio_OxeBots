@@ -61,8 +61,8 @@ int main()
         ball.draw(renderer);
         robot1.draw(renderer);
         robot2.draw(renderer);
-
         Score.updateScore();
+
         // Verifica colisões
         // colisions.checkColisions();
 

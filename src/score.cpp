@@ -14,7 +14,7 @@ void Score::reset()
 };
 void Score::updateScore()
 {
-    if (ball.getX() > (SIDE_MARGIN + FIELD_WIDTH - ball.getRadius()))
+    if (ball.getX() > (2 * SIDE_MARGIN + FIELD_WIDTH - 2 * ball.getRadius()))
         if ((ball.getY() > TOP_MARGIN + 3 * FIELD_HEIGHT / 8) && (ball.getY() < TOP_MARGIN + 5 * FIELD_HEIGHT / 8))
         {
             cout << "Gol Robo 1\n";
@@ -22,7 +22,7 @@ void Score::updateScore()
             cout << scoreRobot1 << " x " << scoreRobot2 << endl;
             reset();
         }
-    if (ball.getX() < (SIDE_MARGIN + ball.getRadius()))
+    if (ball.getX() < (2 * ball.getRadius()))
         if ((ball.getY() > TOP_MARGIN + 3 * FIELD_HEIGHT / 8) && (ball.getY() < TOP_MARGIN + 5 * FIELD_HEIGHT / 8))
         {
             cout << "Gol Robo 2\n";
