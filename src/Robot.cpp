@@ -2,18 +2,21 @@
 
 using namespace std;
 
-Robot::Robot(SDL_Color color, int x, int y, int player)
+Robot::Robot(SDL_Color color, int x, int y, double angle, int player)
     : changingDirection(false),
       moving(false),
       acceleration(0.5),
-      angle(0),
+      angle(angle),
       velocity(1),
       velocityMax(5),
       direction(1),
       withBall(false),
       throwBall(false),
       xThrowSpeed(10),
-      yThrowSpeed(10)
+      yThrowSpeed(10),
+      startX(x),
+      startY(y),
+      startAngle(angle)
 {
     this->x = x;
     this->y = y;
@@ -23,6 +26,16 @@ Robot::Robot(SDL_Color color, int x, int y, int player)
     setBodyPosition(x, y);
 
     this->rotatedBody = body;
+}
+void Robot::reset()
+{
+    changingDirection = false;
+    moving = false;
+    withBall = false;
+    throwBall = false;
+    velocity = 0;
+    setPosition(startX, startY);
+    angle = startAngle;
 }
 
 void Robot::move()
@@ -38,13 +51,13 @@ void Robot::move()
 
     for (int i = 0; i < 4; i++)
     {
-        if (body.points[i].x + x_v <= 5)
+        if (body.points[i].x + x_v <= SIDE_MARGIN + 5)
             x_v = 0;
-        if (body.points[i].x + x_v >= FIELD_WIDTH - 5)
+        if (body.points[i].x + x_v >= SIDE_MARGIN + FIELD_WIDTH - 5)
             x_v = 0;
         if (body.points[i].y + y_v <= 55)
             y_v = 0;
-        if (body.points[i].y + y_v >= FIELD_HEIGHT + DIFERENCE_SCREEN_FIELD_HEIGHT - 5)
+        if (body.points[i].y + y_v >= FIELD_HEIGHT + TOP_MARGIN - 5)
             y_v = 0;
     }
 
