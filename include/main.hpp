@@ -12,5 +12,6 @@
 #include "GlobalVariables.hpp"
 #include "Robot.hpp"
 #include "Interactions.hpp"
+#include "Score.hpp"
 
 #endif //  MAIN_HPP
