@@ -1,4 +1,5 @@
 *.exe
 *.out
 *.o
+*.pb*
 SDL2.dll

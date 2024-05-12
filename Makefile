@@ -1,7 +1,6 @@
 # Define the compiler
 CC := g++
 
-
 # Define the source files
 SOURCE_FILES := $(wildcard src/*.cpp)
 $(info Source files: $(SOURCE_FILES))
@@ -14,52 +13,69 @@ $(info Object files: $(OBJECTS))
 EXEC := executable.out
 $(info Executable: $(EXEC))
 
-# Debug flags
-DEBUG_FLAGS := -g -O0 -Wall -Wextra -Wpedantic -Werror
+# Define the protobuf files
+PROTO_FILES := $(wildcard proto/*.proto)
+PROTO_CPP_FILES := $(PROTO_FILES:.proto=.pb.cc)
+PROTO_H_FILES := $(PROTO_FILES:.proto=.pb.h)
+$(info Proto files: $(PROTO_FILES))
 
-# Release flags
-RELEASE_FLAGS := -O3
+# Specify the directory containing the generated header files
+PROTO_INCLUDE_DIR := .
+CXXFLAGS := -I$(PROTO_INCLUDE_DIR)
 
-# Default flags
-CXXFLAGS := $(RELEASE_FLAGS)
+# Add the proto files to the source files and objects
+SOURCE_FILES += $(PROTO_CPP_FILES)
+OBJECTS += $(PROTO_CPP_FILES:.cc=.o)
 
+# Debug and release flags
+DEBUG_FLAGS := ${CXXFLAGS} -g -O0 -Wall -Wextra -Wpedantic -Werror
+RELEASE_FLAGS := ${CXXFLAGS} -O3
+
+# Determine platform-specific settings
 ifeq ($(OS),Windows_NT)
-	SDL2_FLAGS := -IC:/Users/davia/Downloads/sdl/SDL2-2.30.2/i686-w64-mingw32/include -LC:/Users/davia/Downloads/sdl/SDL2-2.30.2/i686-w64-mingw32/lib -lSDL2
-	CLEAN_CMD := del /f /q $(subst /,\,$(OBJECTS)) $(EXEC)
+    LIBS_FLAGS := -LC:/Users/davia/Downloads/sdl/SDL2-2.30.2/i686-w64-mingw32/lib -lSDL2
+    CLEAN_CMD := del /f /q $(subst /,\,$(OBJECTS) $(PROTO_CPP_FILES) $(PROTO_H_FILES)) $(EXEC)
 else
-	SDL2_FLAGS := $(shell pkg-config --libs sdl2)
-	CLEAN_CMD := rm -f $(OBJECTS) $(EXEC)
+    LIBS_FLAGS := $(shell pkg-config --libs sdl2) $(shell pkg-config --libs protobuf)
+    CLEAN_CMD := rm -f $(OBJECTS) $(EXEC) $(PROTO_CPP_FILES) $(PROTO_H_FILES)
 endif
-$(info SDL2 flags: $(SDL2_FLAGS))
+$(info LIB flags: $(LIBS_FLAGS))
 
+# Default target
 all: $(EXEC)
 	$(info Compilation successful!)
 
+# Debug target
 debug: CXXFLAGS := $(DEBUG_FLAGS)
 debug: all
 	$(info Compiled for debugging...)
 
+# Release target
 release: CXXFLAGS := $(RELEASE_FLAGS)
 release: all
 	$(info Compiled for release...)
 
-
-# Compile the source code into object files
+# Rule to compile source files
 %.o: %.cpp
 	$(info Compiling $<...)
-	$(CC) -c $< -o $@ $(CXXFLAGS) $(SDL2_FLAGS)
+	$(CC) -c $< -o $@ $(CXXFLAGS) $(LIBS_FLAGS)
 
-# Link the object files with SDL2 library to create the executable
+# Rule to link object files and create the executable
 $(EXEC): $(OBJECTS)
 	$(info Linking the object files...)
-	$(CC) $(OBJECTS) -o $(EXEC) $(SDL2_FLAGS)
+	$(CC) $(OBJECTS) -o $(EXEC) $(LIBS_FLAGS)
 
-# Clean the project (removes object files and executable)
+# Rule to compile protobuf files
+$(PROTO_CPP_FILES) $(PROTO_H_FILES): $(PROTO_FILES)
+	$(info Compiling Protobuf files...)
+	protoc --cpp_out=. $(PROTO_FILES)
+
+# Clean rule
 clean:
 	$(info Cleaning the project...)
 	$(CLEAN_CMD)
 
-# Run the program
+# Run rule
 run:
 	$(info Running the program...)
 	./$(EXEC)
