@@ -3,17 +3,19 @@
 
 #include <SDL2/SDL.h>
 #include <math.h>
+
 #include <iostream>
+
 #include "GlobalVariables.hpp"
 
 class Ball
 {
-public:
+   public:
     // Construtor para definir posição, raio e cor
     Ball(int x, int y, int radius, SDL_Color color);
 
     // Função para desenhar a bola no renderizador
-    void draw(SDL_Renderer *renderer);
+    void draw(SDL_Renderer * renderer);
 
     // Função para mover a bola
     void move();
@@ -47,7 +49,7 @@ public:
     void setJustBeenThrow(bool justBeenThrow);
     void reset();
 
-private:
+   private:
     int _x;
     int _y;
     int startX, startY;
@@ -61,4 +63,4 @@ private:
     float _dy;
 };
 
-#endif // BALL_H
+#endif  // BALL_H

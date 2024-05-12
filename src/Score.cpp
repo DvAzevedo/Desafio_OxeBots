@@ -1,21 +1,22 @@
 #include "../include/Score.hpp"
 using namespace std;
 
-Score::Score(Ball &ball, std::vector<Robot *> const robots)
-    : ball(ball), robots(robots), scoreRobot1(0), scoreRobot2(0)
+Score::Score(Ball & ball, std::vector<Robot *> const robots)
+: ball(ball), robots(robots), scoreRobot1(0), scoreRobot2(0)
 {
 }
+
 void Score::reset()
 {
-
-    for (auto robot : robots)
-        robot->reset();
+    for (auto robot : robots) robot->reset();
     ball.reset();
 };
+
 void Score::updateScore()
 {
     if (ball.getX() > (2 * SIDE_MARGIN + FIELD_WIDTH - 2 * ball.getRadius()))
-        if ((ball.getY() > TOP_MARGIN + 3 * FIELD_HEIGHT / 8) && (ball.getY() < TOP_MARGIN + 5 * FIELD_HEIGHT / 8))
+        if ((ball.getY() > TOP_MARGIN + 3 * FIELD_HEIGHT / 8) &&
+            (ball.getY() < TOP_MARGIN + 5 * FIELD_HEIGHT / 8))
         {
             cout << "Gol Robo 1\n";
             scoreRobot1++;
@@ -23,7 +24,8 @@ void Score::updateScore()
             reset();
         }
     if (ball.getX() < (2 * ball.getRadius()))
-        if ((ball.getY() > TOP_MARGIN + 3 * FIELD_HEIGHT / 8) && (ball.getY() < TOP_MARGIN + 5 * FIELD_HEIGHT / 8))
+        if ((ball.getY() > TOP_MARGIN + 3 * FIELD_HEIGHT / 8) &&
+            (ball.getY() < TOP_MARGIN + 5 * FIELD_HEIGHT / 8))
         {
             cout << "Gol Robo 2\n";
             scoreRobot2++;

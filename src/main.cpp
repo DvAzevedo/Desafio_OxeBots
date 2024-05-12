@@ -2,13 +2,8 @@
 
 using namespace std;
 
-#undef main
-int main()
+int mainFunction(JoyInterface & ji)
 {
-    JoyInterface ji;
-
-    std::thread JoyInterfaceThread(&JoyInterface::run, &ji);
-
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -47,10 +42,9 @@ int main()
     Ball ball(SIDE_MARGIN + FIELD_WIDTH / 2, FIELD_HEIGHT / 2 + TOP_MARGIN, 10,
               red);
     Robot robot1(blue, SIDE_MARGIN + FIELD_WIDTH / 2 - 100,
-                 FIELD_HEIGHT / 2 + TOP_MARGIN, 0, 1);
+                 FIELD_HEIGHT / 2 + TOP_MARGIN, 0, 1, ji);
     Robot robot2(green, SIDE_MARGIN + FIELD_WIDTH / 2 + 100,
-                 FIELD_HEIGHT / 2 + TOP_MARGIN, M_2_PI + 2.5F, 2);
-    // robot2.setAngle(M_2_PI + 2.5F);
+                 FIELD_HEIGHT / 2 + TOP_MARGIN, M_2_PI + 2.5F, 2, ji);
 
     Colisions colisions(ball, {&robot1, &robot2});
     Interactions Interactions(ball, {&robot1, &robot2});
@@ -95,10 +89,11 @@ int main()
             {
                 quit = true;
             }
-            else if (e.type == SDL_KEYDOWN)
+            else if (ji.hasKeyEvent())
             {
-                robot1.setMove(e);
-                robot2.setMove(e);
+                proto::KeyEvent key_event = ji.getKeyEvent();
+                robot1.setMove(key_event);
+                robot2.setMove(key_event);
             }
         }
     }
@@ -108,7 +103,19 @@ int main()
     SDL_DestroyWindow(window);
     SDL_Quit();
 
+    return 0;
+}
+
+#undef main
+int main()
+{
+    JoyInterface ji;
+
+    std::thread JoyInterfaceThread(&JoyInterface::run, &ji);
+    std::thread MainThread(&mainFunction, std::ref(ji));
+
     JoyInterfaceThread.join();
+    MainThread.join();
 
     return 0;
 }

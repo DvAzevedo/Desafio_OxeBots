@@ -32,26 +32,27 @@ void JoyInterface::receiveMessage()
                      (struct sockaddr *)&cliaddr, &len);
     buffer[n] = '\0';
 
+    // if receives -1 from client, it means that has no key event
+    if (buffer[0] == '-') return;
+
     proto::KeyEvent keyEvent;
 
     if (!keyEvent.ParseFromString(buffer))
     {
         std::cerr << "Failed to parse key event." << std::endl;
+        std::cerr << "Buffer: " << (char *)buffer << std::endl;
         return;
     }
 
     keyEvents.push(keyEvent);
-
-    // // client address
-    // std::cout << "Client: " << inet_ntoa(cliaddr.sin_addr) << std::endl;
-    // std::cout << "Client: " << buffer << std::endl;
+    std::cout << "Key event received." << std::endl;
+    std::cout << "Key: " << (int)keyEvent.key() << std::endl;
 }
 
 void JoyInterface::sendMessage(const char * message)
 {
     sendto(sockfd, (const char *)message, strlen(message), MSG_CONFIRM,
            (const struct sockaddr *)&cliaddr, len);
-    std::cout << "Message sent to client." << std::endl;
 }
 
 void JoyInterface::run()
@@ -59,7 +60,6 @@ void JoyInterface::run()
     while (true)
     {
         this->receiveMessage();
-        this->sendMessage("Hello from server");
     }
 }
 
@@ -69,3 +69,5 @@ proto::KeyEvent JoyInterface::getKeyEvent()
     keyEvents.pop();
     return keyEvent;
 }
+
+bool JoyInterface::hasKeyEvent() { return !keyEvents.empty(); }

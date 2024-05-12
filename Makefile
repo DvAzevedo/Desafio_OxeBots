@@ -35,11 +35,11 @@ RELEASE_FLAGS := ${CXXFLAGS} -O3
 
 # Determine platform-specific settings
 ifeq ($(OS),Windows_NT)
-    LIBS_FLAGS := -LC:/Users/davia/Downloads/sdl/SDL2-2.30.2/i686-w64-mingw32/lib -lSDL2
-    CLEAN_CMD := del /f /q $(subst /,\,$(OBJECTS) $(PROTO_CPP_FILES) $(PROTO_H_FILES)) $(SIMULATION) $(JOYSTICK)
+	LIBS_FLAGS := -LC:/Users/davia/Downloads/sdl/SDL2-2.30.2/i686-w64-mingw32/lib -lSDL2
+	CLEAN_CMD := del /f /q $(subst /,\,$(OBJECTS) $(PROTO_CPP_FILES) $(PROTO_H_FILES)) $(SIMULATION) $(JOYSTICK)
 else
-    LIBS_FLAGS := $(shell pkg-config --libs sdl2) $(shell pkg-config --libs protobuf)
-    CLEAN_CMD := rm -f $(OBJECTS) $(SIMULATION) $(PROTO_CPP_FILES) $(PROTO_H_FILES) $(JOYSTICK)
+	LIBS_FLAGS := $(shell pkg-config --libs sdl2) $(shell pkg-config --libs protobuf) $(shell pkg-config --libs ncurses)
+	CLEAN_CMD := rm -f $(OBJECTS) $(SIMULATION) $(PROTO_CPP_FILES) $(PROTO_H_FILES) $(JOYSTICK)
 endif
 $(info LIB flags: $(LIBS_FLAGS))
 
@@ -74,7 +74,7 @@ $(PROTO_CPP_FILES) $(PROTO_H_FILES): $(PROTO_FILES)
 
 $(JOYSTICK): $(JOYSTICK_FILES)
 	$(info Compiling Joystick files...)
-	$(CC) $(JOYSTICK_FILES) -o $(JOYSTICK) $(CXXFLAGS) $(LIBS_FLAGS)
+	$(CC) $(JOYSTICK_FILES) $(PROTO_CPP_FILES) -o $(JOYSTICK) $(CXXFLAGS) $(LIBS_FLAGS)
 
 # Clean rule
 clean:

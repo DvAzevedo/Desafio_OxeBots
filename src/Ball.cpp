@@ -4,7 +4,18 @@ using namespace std;
 
 // Construtor para definir posição e raio
 Ball::Ball(int x, int y, int radius, SDL_Color color)
-    : _x(x), _y(y), startX(x), startY(y), _radius(radius), _color(color), _dx(0), _dy(0), isCatch(false) {}
+: _x(x),
+  _y(y),
+  startX(x),
+  startY(y),
+  _radius(radius),
+  _color(color),
+  isCatch(false),
+  justBeenThrow(false),
+  _dx(0),
+  _dy(0)
+{
+}
 
 void Ball::reset()
 {
@@ -14,7 +25,7 @@ void Ball::reset()
     _dy = 0;
 }
 // Função para desenhar a bola no renderizador
-void Ball::draw(SDL_Renderer *renderer)
+void Ball::draw(SDL_Renderer * renderer)
 {
     // Definir a cor da bola
     SDL_SetRenderDrawColor(renderer, _color.r, _color.g, _color.b, _color.a);
@@ -60,12 +71,15 @@ void Ball::move()
 {
     if (!isCatch)
     {
-        if (_x > (SIDE_MARGIN + FIELD_WIDTH - _radius) || _x < (SIDE_MARGIN + _radius))
+        if (_x > (SIDE_MARGIN + FIELD_WIDTH - _radius) ||
+            _x < (SIDE_MARGIN + _radius))
         {
-            if ((_y <= TOP_MARGIN + 3 * FIELD_HEIGHT / 8) || (_y >= TOP_MARGIN + 5 * FIELD_HEIGHT / 8))
+            if ((_y <= TOP_MARGIN + 3 * FIELD_HEIGHT / 8) ||
+                (_y >= TOP_MARGIN + 5 * FIELD_HEIGHT / 8))
                 invertX();
         }
-        if (_y > (TOP_MARGIN + FIELD_HEIGHT - _radius) || _y < (TOP_MARGIN + _radius))
+        if (_y > (TOP_MARGIN + FIELD_HEIGHT - _radius) ||
+            _y < (TOP_MARGIN + _radius))
             invertY();
 
         _x += static_cast<int>(_dx);
@@ -118,4 +132,7 @@ bool Ball::getIsCatch() { return isCatch; }
 
 bool Ball::getJustBeenThrow() { return justBeenThrow; }
 
-void Ball::setJustBeenThrow(bool justBeenThrow) { this->justBeenThrow = justBeenThrow; }
+void Ball::setJustBeenThrow(bool justBeenThrow)
+{
+    this->justBeenThrow = justBeenThrow;
+}

@@ -33,6 +33,8 @@ class JoyInterface
 
     proto::KeyEvent getKeyEvent();
 
+    bool hasKeyEvent();
+
     void sendMessage(const char * message);
 
     void run();

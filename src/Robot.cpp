@@ -2,21 +2,23 @@
 
 using namespace std;
 
-Robot::Robot(SDL_Color color, int x, int y, double angle, int player)
-    : changingDirection(false),
-      moving(false),
-      acceleration(0.5),
-      angle(angle),
-      velocity(1),
-      velocityMax(5),
-      direction(1),
-      withBall(false),
-      throwBall(false),
-      xThrowSpeed(10),
-      yThrowSpeed(10),
-      startX(x),
-      startY(y),
-      startAngle(angle)
+Robot::Robot(SDL_Color color, int x, int y, double angle, int player,
+             JoyInterface & ji)
+: changingDirection(false),
+  moving(false),
+  acceleration(0.5),
+  angle(angle),
+  velocity(1),
+  velocityMax(5),
+  direction(1),
+  withBall(false),
+  throwBall(false),
+  xThrowSpeed(10),
+  yThrowSpeed(10),
+  startX(x),
+  startY(y),
+  startAngle(angle),
+  ji(ji)
 {
     this->x = x;
     this->y = y;
@@ -51,14 +53,10 @@ void Robot::move()
 
     for (int i = 0; i < 4; i++)
     {
-        if (body.points[i].x + x_v <= SIDE_MARGIN + 5)
-            x_v = 0;
-        if (body.points[i].x + x_v >= SIDE_MARGIN + FIELD_WIDTH - 5)
-            x_v = 0;
-        if (body.points[i].y + y_v <= 55)
-            y_v = 0;
-        if (body.points[i].y + y_v >= FIELD_HEIGHT + TOP_MARGIN - 5)
-            y_v = 0;
+        if (body.points[i].x + x_v <= SIDE_MARGIN + 5) x_v = 0;
+        if (body.points[i].x + x_v >= SIDE_MARGIN + FIELD_WIDTH - 5) x_v = 0;
+        if (body.points[i].y + y_v <= 55) y_v = 0;
+        if (body.points[i].y + y_v >= FIELD_HEIGHT + TOP_MARGIN - 5) y_v = 0;
     }
 
     x += x_v;
@@ -75,15 +73,14 @@ void Robot::move()
     stopY = false;
 }
 
-void Robot::draw(SDL_Renderer *renderer)
+void Robot::draw(SDL_Renderer * renderer)
 {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_Color orange = {255, 165, 0, 255};
 
     SDL_Point points_to_draw[5];
 
-    for (int i = 0; i < 4; i++)
-        points_to_draw[i] = rotatedBody.points[i];
+    for (int i = 0; i < 4; i++) points_to_draw[i] = rotatedBody.points[i];
 
     points_to_draw[4] = rotatedBody.points[0];
 
@@ -94,72 +91,70 @@ void Robot::draw(SDL_Renderer *renderer)
     SDL_RenderDrawLines(renderer, head, 2);
 }
 
-void Robot::setMove(SDL_Event &e)
+void Robot::setMove(proto::KeyEvent & e)
 {
-    if (e.type == SDL_KEYDOWN)
+    if (player == 1)
     {
-        if (player == 1)
         {
+            switch (e.key())
             {
-                switch (e.key.keysym.sym)
-                {
-
-                case SDLK_SPACE:
+                case proto::KeyType::SPACE:
                     if (moving)
                         stop();
                     else
                         accelerate();
                     break;
-                case SDLK_UP:
+                case proto::KeyType::UP:
                     forward();
                     break;
-                case SDLK_DOWN:
+                case proto::KeyType::DOWN:
                     backward();
                     break;
-                case SDLK_LEFT:
+                case proto::KeyType::LEFT:
                     turnLeft();
                     break;
-                case SDLK_RIGHT:
+                case proto::KeyType::RIGHT:
                     turnRight();
                     break;
-                case SDLK_RETURN:
-                    if (withBall)
-                        throwBall = true;
+                case proto::KeyType::ENTER:
+                    if (withBall) throwBall = true;
                     break;
-                }
+                default:
+                    break;
             }
         }
-        if (player == 2)
+    }
+    if (player == 2)
+    {
+        switch (e.key())
         {
-            switch (e.key.keysym.sym)
-            {
-
-            case SDLK_f:
+            case proto::KeyType::F:
                 if (moving)
                     stop();
                 else
                     accelerate();
                 break;
-            case SDLK_w:
+            case proto::KeyType::W:
                 forward();
                 break;
-            case SDLK_s:
+            case proto::KeyType::S:
                 backward();
                 break;
-            case SDLK_a:
+            case proto::KeyType::A:
                 turnLeft();
                 break;
-            case SDLK_d:
+            case proto::KeyType::D:
                 turnRight();
                 break;
-            case SDLK_r:
-                if (withBall)
-                    throwBall = true;
+            case proto::KeyType::R:
+                if (withBall) throwBall = true;
                 break;
-            }
+            default:
+                break;
         }
     }
 }
+
 void Robot::forward()
 {
     if (getDirection() == -1)
@@ -204,7 +199,7 @@ void Robot::setVelocity()
         }
     }
     else
-    { // freiando
+    {  // freiando
         if (velocity > 0)
         {
             velocity -= 1;
@@ -280,6 +275,9 @@ bool Robot::getWithBall() { return withBall; }
 
 bool Robot::getThrowBall() { return throwBall; }
 
-void Robot::setJustThrowBall(bool justThrowBall) { this->justThrowBall = justThrowBall; }
+void Robot::setJustThrowBall(bool justThrowBall)
+{
+    this->justThrowBall = justThrowBall;
+}
 
 bool Robot::getJustThrowBall() { return justThrowBall; }

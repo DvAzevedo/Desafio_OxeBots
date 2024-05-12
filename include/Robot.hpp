@@ -1,3 +1,6 @@
+#ifndef ROBOT_HPP
+#define ROBOT_HPP
+
 #include <SDL2/SDL.h>
 #include <math.h>
 
@@ -6,9 +9,7 @@
 
 #include "Functions.hpp"
 #include "GlobalVariables.hpp"
-
-#ifndef ROBOT_HPP
-#define ROBOT_HPP
+#include "JoyInterface.hpp"
 
 struct RobotBody
 {
@@ -18,11 +19,12 @@ struct RobotBody
 
 class Robot
 {
-public:
-    Robot(SDL_Color color, int x, int y, double angle, int player);
-    void setMove(SDL_Event &e);
+   public:
+    Robot(SDL_Color color, int x, int y, double angle, int player,
+          JoyInterface & ji);
+    void setMove(proto::KeyEvent & e);
     void move();
-    void draw(SDL_Renderer *renderer);
+    void draw(SDL_Renderer * renderer);
 
     void forward();
     void backward();
@@ -68,28 +70,29 @@ public:
     void reset();
     void setBodyPosition(int x, int y);
 
-private:
-    int player;
+   private:
     bool changingDirection;
     bool moving;
-    bool stopX, stopY;
     double acceleration;
     double angle;
     double velocity;
     double velocityMax;
     int direction;
-    int x, y;
+    bool withBall;
+    bool throwBall;
+    double xThrowSpeed, yThrowSpeed;
     int startX, startY;
     double startAngle;
+    JoyInterface & ji;
+    int player;
+    bool stopX, stopY;
+    int x, y;
     RobotBody body;
     RobotBody rotatedBody;
     SDL_Color color;
-    double xThrowSpeed, yThrowSpeed;
-    bool withBall;
-    bool throwBall;
     bool justThrowBall;
 
     void rotate(double angle);
 };
 
-#endif // ROBOT_HPP
+#endif  // ROBOT_HPP

@@ -1,7 +1,7 @@
 #include "../include/Colisions.hpp"
 
-Colisions::Colisions(Ball &ball, std::vector<Robot *> const robots)
-    : ball(ball), robots(robots)
+Colisions::Colisions(Ball & ball, std::vector<Robot *> const robots)
+: ball(ball), robots(robots)
 {
 }
 
@@ -9,8 +9,7 @@ void Colisions::checkColisions() { checkBallColisions(); }
 
 void Colisions::checkBallColisions()
 {
-    for (auto robot : robots)
-        checkBallRobotColisions(robot);
+    for (auto robot : robots) checkBallRobotColisions(robot);
 }
 
 enum class ColideBy
@@ -21,11 +20,11 @@ enum class ColideBy
     BOTTOM
 };
 
-void Colisions::checkBallRobotColisions(Robot *robot)
+void Colisions::checkBallRobotColisions(Robot * robot)
 {
     SDL_Point unRotatedBall =
-        RotatePoint({ball.getX(), ball.getY()}, -robot->getAngle(),
-                    {robot->getX(), robot->getY()});
+      RotatePoint({ball.getX(), ball.getY()}, -robot->getAngle(),
+                  {robot->getX(), robot->getY()});
 
     ColideBy collision;
     bool collided = false;
@@ -60,29 +59,27 @@ void Colisions::checkBallRobotColisions(Robot *robot)
 
     double distance = findDistance(unRotatedBall, closestPoint);
 
-    if (distance < ball.getRadius())
-        collided = true;
+    if (distance < ball.getRadius()) collided = true;
 
-    if (collided)
-        switch (collision)
+    if (collided) switch (collision)
         {
-        case ColideBy::LEFT:
-            ball.setSpeed(-BALL_SPEED, ball.getDY());
-            ball.invertY();
-            break;
-        case ColideBy::RIGHT:
-            ball.setSpeed(BALL_SPEED, ball.getDY());
-            ball.invertY();
-            break;
-        case ColideBy::TOP:
-            ball.setSpeed(ball.getDX(), -BALL_SPEED);
-            ball.invertX();
-            break;
-        case ColideBy::BOTTOM:
-            ball.setSpeed(ball.getDX(), BALL_SPEED);
-            ball.invertX();
-            break;
-        default:
-            break;
+            case ColideBy::LEFT:
+                ball.setSpeed(-BALL_SPEED, ball.getDY());
+                ball.invertY();
+                break;
+            case ColideBy::RIGHT:
+                ball.setSpeed(BALL_SPEED, ball.getDY());
+                ball.invertY();
+                break;
+            case ColideBy::TOP:
+                ball.setSpeed(ball.getDX(), -BALL_SPEED);
+                ball.invertX();
+                break;
+            case ColideBy::BOTTOM:
+                ball.setSpeed(ball.getDX(), BALL_SPEED);
+                ball.invertX();
+                break;
+            default:
+                break;
         }
 }

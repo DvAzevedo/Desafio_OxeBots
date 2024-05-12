@@ -7,23 +7,23 @@
 #include <vector>
 
 #include "Ball.hpp"
+#include "Functions.hpp"
 #include "GlobalVariables.hpp"
 #include "Robot.hpp"
-#include "Functions.hpp"
 
 class Colisions
 {
-private:
-    Ball &ball;
+   private:
+    Ball & ball;
     std::vector<Robot *> robots;
 
-public:
-    Colisions(Ball &ball, std::vector<Robot *> robots);
+   public:
+    Colisions(Ball & ball, std::vector<Robot *> robots);
     void checkColisions();
 
-private:
+   private:
     void checkBallColisions();
-    void checkBallRobotColisions(Robot *robot);
+    void checkBallRobotColisions(Robot * robot);
 };
 
-#endif // COLISIONS_HPP
+#endif  // COLISIONS_HPP

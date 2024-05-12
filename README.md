@@ -9,16 +9,17 @@ Considerando que o simulador é primariamente uma ferramenta de validação, tor
 ## Dependências
 
 - SDL2
+- protobuf
+- make
+- ncurses
 
 ## Instalação
 
-No Ubuntu, você pode instalar o SDL2 através do comando:
+No Ubuntu, você pode instalar as dependências necessárias executando o comando abaixo:
 
 ``` sh
-sudo apt-get install libsdl2-dev
+sudo apt-get install libsdl2-dev protobuf-compiler ncurses-bin ncurses-base ncurses-term make
 ```
-
-No Windows, você pode baixar o SDL2 [aqui](https://www.libsdl.org/download-2.0.php), importante configurar o PATH do SDL2 em seu ambiente.
 
 ## Como compilar
 
@@ -28,6 +29,6 @@ Para compilar o projeto, basta executar o comando `make` no terminal.
 
 Para executar o projeto, basta executar o comando `make run` no terminal.
 
-No VSCode, você pode executar o projeto pressionando através da extensão `ms-vscode.makefile-tools`.
+No VSCode, você pode executar o projeto através da extensão `ms-vscode.makefile-tools`.
 
 > VS Marketplace Link: [https://marketplace.visualstudio.com/items?itemName=ms-vscode.makefile-tools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.makefile-tools)
