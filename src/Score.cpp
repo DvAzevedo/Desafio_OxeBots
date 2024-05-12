@@ -1,4 +1,4 @@
-#include "../include/score.hpp"
+#include "../include/Score.hpp"
 using namespace std;
 
 Score::Score(Ball &ball, std::vector<Robot *> const robots)
