@@ -1,9 +1,14 @@
 #include "../include/main.hpp"
 
 using namespace std;
+
 #undef main
 int main()
 {
+    JoyInterface ji;
+
+    std::thread JoyInterfaceThread(&JoyInterface::run, &ji);
+
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -12,9 +17,9 @@ int main()
         return 1;
     }
 
-    SDL_Window *window = SDL_CreateWindow(
-        "Desafio OxeBots Equipe 1", SDL_WINDOWPOS_UNDEFINED,
-        SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    SDL_Window * window = SDL_CreateWindow(
+      "Desafio OxeBots Equipe 1", SDL_WINDOWPOS_UNDEFINED,
+      SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
     if (window == NULL)
     {
@@ -23,8 +28,8 @@ int main()
         return 1;
     }
 
-    SDL_Renderer *renderer =
-        SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_Renderer * renderer =
+      SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     if (renderer == NULL)
     {
@@ -39,9 +44,12 @@ int main()
     SDL_Color blue = {0, 0, 200, 255};
     SDL_Color green = {0, 200, 0, 255};
 
-    Ball ball(SIDE_MARGIN + FIELD_WIDTH / 2, FIELD_HEIGHT / 2 + TOP_MARGIN, 10, red);
-    Robot robot1(blue, SIDE_MARGIN + FIELD_WIDTH / 2 - 100, FIELD_HEIGHT / 2 + TOP_MARGIN, 0, 1);
-    Robot robot2(green, SIDE_MARGIN + FIELD_WIDTH / 2 + 100, FIELD_HEIGHT / 2 + TOP_MARGIN, M_2_PI + 2.5F, 2);
+    Ball ball(SIDE_MARGIN + FIELD_WIDTH / 2, FIELD_HEIGHT / 2 + TOP_MARGIN, 10,
+              red);
+    Robot robot1(blue, SIDE_MARGIN + FIELD_WIDTH / 2 - 100,
+                 FIELD_HEIGHT / 2 + TOP_MARGIN, 0, 1);
+    Robot robot2(green, SIDE_MARGIN + FIELD_WIDTH / 2 + 100,
+                 FIELD_HEIGHT / 2 + TOP_MARGIN, M_2_PI + 2.5F, 2);
     // robot2.setAngle(M_2_PI + 2.5F);
 
     Colisions colisions(ball, {&robot1, &robot2});
@@ -99,6 +107,8 @@ int main()
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+
+    JoyInterfaceThread.join();
 
     return 0;
 }

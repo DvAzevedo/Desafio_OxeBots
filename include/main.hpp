@@ -5,13 +5,15 @@
 #include <math.h>
 
 #include <iostream>
+#include <thread>
 
 #include "Ball.hpp"
 #include "Colisions.hpp"
 #include "Field.hpp"
 #include "GlobalVariables.hpp"
-#include "Robot.hpp"
 #include "Interactions.hpp"
+#include "JoyInterface.hpp"
+#include "Robot.hpp"
 #include "Score.hpp"
 
-#endif //  MAIN_HPP
+#endif  //  MAIN_HPP
