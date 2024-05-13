@@ -1,36 +1,42 @@
-# Define the compiler
+# Define o compilador
 CC := g++
 
-
-# Define the source files
+# Define os arquivos fonte
 SOURCE_FILES := $(wildcard src/*.cpp)
 $(info Source files: $(SOURCE_FILES))
 
-# Define the object file names
+# Define os nomes dos arquivos de objeto
 OBJECTS := $(SOURCE_FILES:.cpp=.o)
 $(info Object files: $(OBJECTS))
 
-# Define the executable name
+# Define o nome do executável
 EXEC := executable.out
 $(info Executable: $(EXEC))
 
-# Debug flags
+# Flags de depuração
 DEBUG_FLAGS := -g -O0 -Wall -Wextra -Wpedantic -Werror
 
-# Release flags
+# Flags de lançamento
 RELEASE_FLAGS := -O3
 
-# Default flags
-CXXFLAGS := $(RELEASE_FLAGS)
+# Flags padrão
+CXXFLAGS := $(RELEASE_FLAGS) $(SDL_INCLUDE_FLAGS)
 
 ifeq ($(OS),Windows_NT)
-	SDL2_FLAGS := -IC:/Users/davia/Downloads/sdl/SDL2-2.30.2/i686-w64-mingw32/include -LC:/Users/davia/Downloads/sdl/SDL2-2.30.2/i686-w64-mingw32/lib -lSDL2
-	CLEAN_CMD := del /f /q $(subst /,\,$(OBJECTS)) $(EXEC)
+    # Se estiver no Windows, utilize a variável de ambiente SDL2_PATH
+    LIBS_FLAGS := -LC:/Users/davia/Downloads/sdl/SDL2-2.30.2/i686-w64-mingw32/lib -lSDL2
+    SDL_INCLUDE_FLAGS := -IC:/Users/davia/Downloads/sdl/SDL2-2.30.2/i686-w64-mingw32/include
+    CLEAN_CMD := del /f /q $(subst /,\,$(OBJECTS) $(PROTO_CPP_FILES) $(PROTO_H_FILES)) $(SIMULATION) $(JOYSTICK)
 else
-	SDL2_FLAGS := $(shell pkg-config --libs sdl2)
-	CLEAN_CMD := rm -f $(OBJECTS) $(EXEC)
+    # Se não estiver no Windows, use pkg-config para obter as flags das bibliotecas
+    LIBS_FLAGS := $(shell pkg-config --libs sdl2) $(shell pkg-config --libs protobuf) $(shell pkg-config --libs ncurses)
+    SDL_INCLUDE_FLAGS := $(shell pkg-config --cflags sdl2)
+    CLEAN_CMD := rm -f $(OBJECTS) $(SIMULATION) $(PROTO_CPP_FILES) $(PROTO_H_FILES) $(JOYSTICK)
 endif
-$(info SDL2 flags: $(SDL2_FLAGS))
+# Compilação de cada arquivo fonte
+src/%.o: src/%.cpp
+	@echo "Compiling $<..."
+	@$(CXX) -c $< -o $@ $(CXXFLAGS) $(SDL_INCLUDE_FLAGS)
 
 all: $(EXEC)
 	$(info Compilation successful!)
@@ -43,23 +49,18 @@ release: CXXFLAGS := $(RELEASE_FLAGS)
 release: all
 	$(info Compiled for release...)
 
-
-# Compile the source code into object files
-%.o: %.cpp
-	$(info Compiling $<...)
-	$(CC) -c $< -o $@ $(CXXFLAGS) $(SDL2_FLAGS)
-
-# Link the object files with SDL2 library to create the executable
+# Link os arquivos de objeto com a biblioteca SDL2 para criar o executável
 $(EXEC): $(OBJECTS)
 	$(info Linking the object files...)
-	$(CC) $(OBJECTS) -o $(EXEC) $(SDL2_FLAGS)
+	$(CC) $(OBJECTS) -o $(EXEC) $(LIBS_FLAGS)
 
-# Clean the project (removes object files and executable)
+# Limpa o projeto (remove arquivos de objeto e executável)
 clean:
 	$(info Cleaning the project...)
 	$(CLEAN_CMD)
 
-# Run the program
+# Executa o programa
 run:
 	$(info Running the program...)
 	./$(EXEC)
+
