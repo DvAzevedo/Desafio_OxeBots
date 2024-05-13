@@ -45,8 +45,6 @@ void JoyInterface::receiveMessage()
     }
 
     keyEvents.push(keyEvent);
-    std::cout << "Key event received." << std::endl;
-    std::cout << "Key: " << (int)keyEvent.key() << std::endl;
 }
 
 void JoyInterface::sendMessage(const char * message)

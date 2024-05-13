@@ -82,19 +82,16 @@ int mainFunction(JoyInterface & ji)
         // Atraso para manter a taxa de quadros constante em ~60 FPS
         SDL_Delay(MS_PER_FRAME);
 
-        // Processa os eventos
+        // Processa os eventos do SDL (tela principal)
         while (SDL_PollEvent(&e) != 0)
+            if (e.type == SDL_QUIT) quit = true;
+
+        // Processa os eventos do JoyInterface (controle remoto)
+        while (ji.hasKeyEvent())
         {
-            if (e.type == SDL_QUIT)
-            {
-                quit = true;
-            }
-            else if (ji.hasKeyEvent())
-            {
-                proto::KeyEvent key_event = ji.getKeyEvent();
-                robot1.setMove(key_event);
-                robot2.setMove(key_event);
-            }
+            proto::KeyEvent key_event = ji.getKeyEvent();
+            robot1.setMove(key_event);
+            robot2.setMove(key_event);
         }
     }
 
