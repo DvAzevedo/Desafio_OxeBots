@@ -45,18 +45,18 @@ void Field::draw(SDL_Renderer * renderer)
     // Gol Robot 1 defende
     SDL_Rect leftGol = {0, TOP_MARGIN + 3 * gol_height / 2, gol_width,
                         gol_height};
-    SDL_SetRenderDrawColor(renderer, 200, 200, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
     SDL_RenderFillRect(renderer, &leftGol);
-    SDL_SetRenderDrawColor(renderer, 0, 100, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderDrawRect(renderer, &leftGol);
 
     // Gol Robot 2 defende
     SDL_Rect rightGol = {SIDE_MARGIN + width + 1,
                          TOP_MARGIN + 3 * gol_height / 2, gol_width,
                          gol_height};
-    SDL_SetRenderDrawColor(renderer, 200, 0, 200, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     SDL_RenderFillRect(renderer, &rightGol);
-    SDL_SetRenderDrawColor(renderer, 100, 0, 100, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderDrawRect(renderer, &rightGol);
 
     // Placar

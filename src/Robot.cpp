@@ -98,25 +98,25 @@ void Robot::setMove(proto::KeyEvent & e)
         {
             switch (e.key())
             {
-                case proto::KeyType::SPACE:
+                case proto::KeyType::F:
                     if (moving)
                         stop();
                     else
                         accelerate();
                     break;
-                case proto::KeyType::UP:
+                case proto::KeyType::W:
                     forward();
                     break;
-                case proto::KeyType::DOWN:
+                case proto::KeyType::S:
                     backward();
                     break;
-                case proto::KeyType::LEFT:
+                case proto::KeyType::A:
                     turnLeft();
                     break;
-                case proto::KeyType::RIGHT:
+                case proto::KeyType::D:
                     turnRight();
                     break;
-                case proto::KeyType::ENTER:
+                case proto::KeyType::R:
                     if (withBall) throwBall = true;
                     break;
                 default:
@@ -128,25 +128,25 @@ void Robot::setMove(proto::KeyEvent & e)
     {
         switch (e.key())
         {
-            case proto::KeyType::F:
+            case proto::KeyType::ENTER:
                 if (moving)
                     stop();
                 else
                     accelerate();
                 break;
-            case proto::KeyType::W:
+            case proto::KeyType::UP:
                 forward();
                 break;
-            case proto::KeyType::S:
+            case proto::KeyType::DOWN:
                 backward();
                 break;
-            case proto::KeyType::A:
+            case proto::KeyType::LEFT:
                 turnLeft();
                 break;
-            case proto::KeyType::D:
+            case proto::KeyType::RIGHT:
                 turnRight();
                 break;
-            case proto::KeyType::R:
+            case proto::KeyType::SPACE:
                 if (withBall) throwBall = true;
                 break;
             default:

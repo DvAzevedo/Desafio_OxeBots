@@ -16,6 +16,58 @@
 
 #include <SDL2/SDL.h>
 
+class Button
+{
+   private:
+    SDL_Rect rect;
+    bool pressed;
+    SDL_Keycode key;
+    SDL_Color color;
+
+   public:
+    Button(int x, int y, int w, int h, SDL_Keycode key, SDL_Color color)
+    : pressed(false), key(key), color(color)
+    {
+        rect.x = x;
+        rect.y = y;
+        rect.w = w;
+        rect.h = h;
+    }
+
+    void handleEvent(const SDL_Event & e)
+    {
+        if (e.type == SDL_KEYDOWN and e.key.keysym.sym == key and !pressed)
+        {
+            pressed = true;
+        }
+        else if (e.type == SDL_KEYUP and e.key.keysym.sym == key and pressed)
+        {
+            pressed = false;
+        }
+    }
+
+    void render(SDL_Renderer * renderer)
+    {
+        // Draw button background
+        if (pressed)
+        {
+            // Fill with the color when pressed
+            SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b,
+                                   color.a);
+        }
+        else
+        {
+            // White when released
+            SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+        }
+        SDL_RenderFillRect(renderer, &rect);
+
+        // Draw button border
+        SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+        SDL_RenderDrawRect(renderer, &rect);
+    }
+};
+
 class Joy
 {
    private:
@@ -28,6 +80,10 @@ class Joy
     // SDL variables
     SDL_Window * window;
     SDL_Renderer * renderer;
+
+    // players buttons
+    std::vector<Button> player1Buttons;
+    std::vector<Button> player2Buttons;
 
    public:
     bool running;
@@ -80,6 +136,32 @@ class Joy
 
         // Set window color to white
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+        SDL_Color red = {255, 0, 0, 255};
+        SDL_Color blue = {0, 0, 255, 255};
+        SDL_Color green = {0, 255, 0, 255};
+        SDL_Color purple = {255, 0, 255, 255};
+
+        // Create buttons
+        player1Buttons.push_back(Button(152, 120, 20, 50, SDLK_w, blue));  // W
+        player1Buttons.push_back(Button(55, 235, 50, 20, SDLK_a, blue));   // A
+        player1Buttons.push_back(Button(152, 311, 20, 50, SDLK_s, blue));  // S
+        player1Buttons.push_back(Button(215, 235, 50, 20, SDLK_d, blue));  // D
+        player1Buttons.push_back(Button(55, 35, 50, 50, SDLK_r, purple));  // R
+        player1Buttons.push_back(Button(137, 216, 50, 50, SDLK_f, red));   // F
+
+        player2Buttons.push_back(
+          Button(472, 120, 20, 50, SDLK_UP, green));  // UP
+        player2Buttons.push_back(
+          Button(376, 235, 50, 20, SDLK_LEFT, green));  // LEFT
+        player2Buttons.push_back(
+          Button(472, 311, 20, 50, SDLK_DOWN, green));  // DOWN
+        player2Buttons.push_back(
+          Button(535, 235, 50, 20, SDLK_RIGHT, green));  // RIGHT
+        player2Buttons.push_back(
+          Button(535, 35, 50, 50, SDLK_SPACE, purple));  // SPACE
+        player2Buttons.push_back(
+          Button(457, 216, 50, 50, SDLK_RETURN, red));  // ENTER
     }
 
     void sendMessage(const char * message)
@@ -102,14 +184,21 @@ class Joy
         SDL_Event event;
         while (SDL_PollEvent(&event))
         {
-            std::cout << "Event type: " << event.type << std::endl;
             switch (event.type)
             {
                 case SDL_KEYDOWN:
                     pressedKeys.insert(event.key.keysym.sym);
+                    for (Button & button : player1Buttons)
+                        button.handleEvent(event);
+                    for (Button & button : player2Buttons)
+                        button.handleEvent(event);
                     break;
                 case SDL_KEYUP:
                     pressedKeys.erase(event.key.keysym.sym);
+                    for (Button & button : player1Buttons)
+                        button.handleEvent(event);
+                    for (Button & button : player2Buttons)
+                        button.handleEvent(event);
                     break;
                 case SDL_QUIT:
                     running = false;
@@ -120,8 +209,6 @@ class Joy
         }
         for (int key : pressedKeys)
         {
-            std::cout << key << '\t' << std::flush;
-
             proto::KeyEvent keyEvent;
             switch (key)
             {
@@ -179,8 +266,25 @@ class Joy
 
     ~Joy()
     {
+        // Cleanup
         close(sockfd);
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
         SDL_Quit();
+    }
+
+    void renderButtons()
+    {
+        // Clear screen
+        SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+        SDL_RenderClear(renderer);
+
+        // Render buttons
+        for (Button & button : player1Buttons) button.render(renderer);
+        for (Button & button : player2Buttons) button.render(renderer);
+
+        // Update screen
+        SDL_RenderPresent(renderer);
     }
 };
 
@@ -191,6 +295,7 @@ int main()
     while (client.running)
     {
         client.handleInput();
+        client.renderButtons();
         SDL_Delay(MS_PER_FRAME);
     }
 
