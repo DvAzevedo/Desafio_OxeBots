@@ -11,7 +11,7 @@ Considerando que o simulador é primariamente uma ferramenta de validação, tor
 - SDL2
 - protobuf
 - make
-- 
+
 ## Instalação
 
 No Ubuntu, você pode instalar as dependências necessárias executando o comando abaixo:
