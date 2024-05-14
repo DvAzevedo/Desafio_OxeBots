@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package proto;
+
+// Enum com os tipos de chave que podem ser usados ​​para identificar uma
+// tecla.
+
+enum KeyType {
+  LEFT = 0;
+  RIGHT = 1;
+  UP = 2;
+  DOWN = 3;
+  SPACE = 4;
+  ENTER = 5;
+  BACKSPACE = 6;
+  W = 7;
+  A = 8;
+  S = 9;
+  D = 10;
+  R = 11;
+  F = 12;
+}
+
+// Mensagem que representa um evento de tecla.
+
+message KeyEvent { KeyType key = 1; }
