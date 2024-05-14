@@ -32,3 +32,24 @@ Para executar o projeto, basta executar o comando `make run` no terminal.
 No VSCode, você pode executar o projeto através da extensão `ms-vscode.makefile-tools`.
 
 > VS Marketplace Link: [https://marketplace.visualstudio.com/items?itemName=ms-vscode.makefile-tools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.makefile-tools)
+
+
+- Backgroud
+  - Placar
+- Desenvolvimento
+  - Robô
+    - Movimentação
+    - Colisão
+    - Controle
+    - Interação com a bola
+  - Bola
+    - Movimentação
+    - Colisão
+  - Comunicação
+    - Protocolo
+    - Envio de comandos
+  - Aquitetura do projeto
+    - Classes
+    - Funções
+    - Gol e placar
+    - Organização
