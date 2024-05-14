@@ -90,7 +90,7 @@ class Joy
 
     Joy() : len(0), buffer{0}, running(true)
     {
-        // Creating socket file descriptor (same as before)
+        // Creating socket file descriptor
         if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
         {
             perror("socket creation failed");
@@ -99,7 +99,7 @@ class Joy
 
         memset(&servaddr, 0, sizeof(servaddr));
 
-        // Filling server information (same as before)
+        // Filling server information
         servaddr.sin_family = AF_INET;
         servaddr.sin_port = htons(PORT);
         servaddr.sin_addr.s_addr = INADDR_ANY;
